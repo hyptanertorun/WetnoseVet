@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { siteInfo } from '../data/mockData';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle, Sparkles, Calendar } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle, ArrowRight } from 'lucide-react';
 
 const ContactSection = () => {
   const sectionRef = useRef(null);
@@ -9,7 +9,6 @@ const ContactSection = () => {
     name: '',
     email: '',
     phone: '',
-    petName: '',
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -37,192 +36,170 @@ const ContactSection = () => {
     setIsSubmitted(true);
     setTimeout(() => {
       setIsSubmitted(false);
-      setFormData({ name: '', email: '', phone: '', petName: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', message: '' });
     }, 3000);
   };
 
   const contactInfo = [
-    {
-      icon: MapPin,
-      title: 'Adres',
-      content: siteInfo.address,
-      color: 'bg-red-100 text-red-500'
-    },
-    {
-      icon: Phone,
-      title: 'Telefon',
-      content: siteInfo.phone,
-      color: 'bg-green-100 text-green-500'
-    },
-    {
-      icon: Mail,
-      title: 'E-Posta',
-      content: siteInfo.email,
-      color: 'bg-blue-100 text-blue-500'
-    },
-    {
-      icon: Clock,
-      title: 'Çalışma Saatleri',
-      content: '7/24 Açık',
-      color: 'bg-purple-100 text-purple-500'
-    }
+    { icon: MapPin, label: 'Adres', value: siteInfo.address },
+    { icon: Phone, label: 'Telefon', value: siteInfo.phone },
+    { icon: Mail, label: 'E-Posta', value: siteInfo.email },
+    { icon: Clock, label: 'Çalışma', value: '7/24 Açık' }
   ];
 
   return (
     <section 
       id="iletisim" 
       ref={sectionRef}
-      className="py-28 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden"
+      className="relative min-h-screen bg-gray-900 overflow-hidden"
     >
-      {/* Decorative Elements */}
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-teal-500/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl animate-morph" />
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-teal-500/5 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl animate-morph" style={{ animationDelay: '4s' }} />
+      {/* Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-teal-900/50 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl" />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 relative">
-        {/* Section Header */}
-        <div className={`text-center mb-20 transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}>
-          <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-teal-100 to-teal-50 text-teal-600 rounded-full text-sm font-medium mb-6 shadow-sm">
-            <Calendar size={16} />
-            Bize Ulaşın
-          </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6">
-            İLETİŞİM
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Online randevu almak veya sorularınız için bize ulaşın
-          </p>
-          <div className="flex items-center justify-center gap-2 mt-8">
-            <span className="w-2 h-2 bg-teal-300 rounded-full" />
-            <span className="w-20 h-1 bg-gradient-to-r from-teal-400 to-teal-600 rounded-full" />
-            <span className="w-2 h-2 bg-teal-300 rounded-full" />
-          </div>
-        </div>
+      <div className="relative min-h-screen flex items-center">
+        <div className="w-full max-w-7xl mx-auto px-8 py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+            {/* Left - Info */}
+            <div className={`transition-all duration-1000 ${
+              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            }`}>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="h-px w-20 bg-teal-500" />
+                <span className="text-teal-400 text-sm tracking-[0.3em] uppercase font-medium">İletişim</span>
+              </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Info & Map */}
-          <div className={`transition-all duration-1000 ${
-            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
-          }`}>
-            {/* Contact Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-              {contactInfo.map((info, index) => (
-                <div
-                  key={info.title}
-                  className="group p-5 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <div className={`w-12 h-12 ${info.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <info.icon size={24} />
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-none mb-8">
+                BİZE
+                <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-500">
+                  ULAŞIN
+                </span>
+              </h2>
+
+              <p className="text-xl text-white/60 leading-relaxed mb-12 max-w-lg">
+                Sorularınız veya randevu talepleriniz için bize ulaşın. En kısa sürede dönüş yapalım.
+              </p>
+
+              {/* Contact Info Cards */}
+              <div className="grid grid-cols-2 gap-4">
+                {contactInfo.map((info, index) => (
+                  <div 
+                    key={info.label}
+                    className={`group p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-teal-500/50 transition-all duration-500 ${
+                      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                    }`}
+                    style={{ transitionDelay: `${index * 100}ms` }}
+                  >
+                    <div className="w-12 h-12 bg-teal-500/20 rounded-xl flex items-center justify-center text-teal-400 mb-4 group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                      <info.icon size={24} />
+                    </div>
+                    <div className="text-white/40 text-sm mb-1">{info.label}</div>
+                    <div className="text-white font-medium text-sm">{info.value}</div>
                   </div>
-                  <h4 className="font-bold text-gray-800 mb-1">{info.title}</h4>
-                  <p className="text-gray-600 text-sm">{info.content}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
-            {/* Map */}
-            <div className="relative rounded-2xl overflow-hidden shadow-xl h-80">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3019.5!2d29.9!3d40.7!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzAwLjAiTiAyOcKwNTQnMDAuMCJF!5e0!3m2!1str!2str!4v1234567890"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Wetnose Konum"
-              />
-              <div className="absolute inset-0 pointer-events-none border-4 border-white rounded-2xl" />
-            </div>
-          </div>
+            {/* Right - Form */}
+            <div className={`transition-all duration-1000 delay-300 ${
+              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+            }`}>
+              <div className="bg-white rounded-3xl p-10 shadow-2xl">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Randevu Formu</h3>
+                <p className="text-gray-600 mb-8">Formu doldurun, sizi arayalim</p>
 
-          {/* Contact Form */}
-          <div className={`transition-all duration-1000 delay-200 ${
-            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
-          }`}>
-            <div className="bg-white rounded-3xl p-8 shadow-xl">
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">Online Randevu</h3>
-              <p className="text-gray-600 mb-8">Formu doldurun, sizi hemen arayalim</p>
+                {isSubmitted ? (
+                  <div className="text-center py-16">
+                    <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CheckCircle size={40} className="text-teal-600" />
+                    </div>
+                    <h4 className="text-2xl font-bold text-gray-900 mb-2">Mesaj Gönderildi!</h4>
+                    <p className="text-gray-600">En kısa sürede dönüş yapacağız.</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Name & Phone */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          onFocus={() => setFocusedField('name')}
+                          onBlur={() => setFocusedField(null)}
+                          className="w-full px-0 py-4 bg-transparent border-b-2 border-gray-200 focus:border-teal-500 outline-none transition-colors text-gray-900 peer"
+                          placeholder=" "
+                          required
+                        />
+                        <label className={`absolute left-0 transition-all duration-300 pointer-events-none ${
+                          formData.name || focusedField === 'name' ? '-top-2 text-xs text-teal-600' : 'top-4 text-gray-500'
+                        }`}>Adınız Soyadınız</label>
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          onFocus={() => setFocusedField('phone')}
+                          onBlur={() => setFocusedField(null)}
+                          className="w-full px-0 py-4 bg-transparent border-b-2 border-gray-200 focus:border-teal-500 outline-none transition-colors text-gray-900"
+                          placeholder=" "
+                          required
+                        />
+                        <label className={`absolute left-0 transition-all duration-300 pointer-events-none ${
+                          formData.phone || focusedField === 'phone' ? '-top-2 text-xs text-teal-600' : 'top-4 text-gray-500'
+                        }`}>Telefon</label>
+                      </div>
+                    </div>
 
-              {isSubmitted ? (
-                <div className="text-center py-12">
-                  <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle size={40} className="text-green-500" />
-                  </div>
-                  <h4 className="text-xl font-bold text-gray-800 mb-2">Mesajınız Alındı!</h4>
-                  <p className="text-gray-600">En kısa sürede sizinle iletişime geçeceğiz.</p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Adınız Soyadınız</label>
-                      <input
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                        placeholder="Adınız"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Telefon</label>
-                      <input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                        placeholder="0555 555 55 55"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">E-Posta</label>
+                    {/* Email */}
+                    <div className="relative">
                       <input
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                        placeholder="ornek@email.com"
+                        onFocus={() => setFocusedField('email')}
+                        onBlur={() => setFocusedField(null)}
+                        className="w-full px-0 py-4 bg-transparent border-b-2 border-gray-200 focus:border-teal-500 outline-none transition-colors text-gray-900"
+                        placeholder=" "
                         required
                       />
+                      <label className={`absolute left-0 transition-all duration-300 pointer-events-none ${
+                        formData.email || focusedField === 'email' ? '-top-2 text-xs text-teal-600' : 'top-4 text-gray-500'
+                      }`}>E-Posta</label>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Dostunuzun Adı</label>
-                      <input
-                        type="text"
-                        value={formData.petName}
-                        onChange={(e) => setFormData({ ...formData, petName: e.target.value })}
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                        placeholder="Minik dostunuzun adı"
+
+                    {/* Message */}
+                    <div className="relative">
+                      <textarea
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        onFocus={() => setFocusedField('message')}
+                        onBlur={() => setFocusedField(null)}
+                        rows={4}
+                        className="w-full px-0 py-4 bg-transparent border-b-2 border-gray-200 focus:border-teal-500 outline-none transition-colors text-gray-900 resize-none"
+                        placeholder=" "
+                        required
                       />
+                      <label className={`absolute left-0 transition-all duration-300 pointer-events-none ${
+                        formData.message || focusedField === 'message' ? '-top-2 text-xs text-teal-600' : 'top-4 text-gray-500'
+                      }`}>Mesajınız</label>
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Mesajınız</label>
-                    <textarea
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      rows={4}
-                      className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all resize-none"
-                      placeholder="Mesajınızı yazın..."
-                      required
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl font-semibold hover:from-teal-600 hover:to-teal-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-teal-500/30 hover:-translate-y-0.5"
-                  >
-                    <Send size={20} />
-                    Randevu Talebi Gönder
-                  </button>
-                </form>
-              )}
+
+                    <button
+                      type="submit"
+                      className="w-full py-5 bg-gray-900 text-white rounded-2xl font-semibold hover:bg-teal-600 transition-colors flex items-center justify-center gap-3 group"
+                    >
+                      <Send size={20} />
+                      Gönder
+                      <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </form>
+                )}
+              </div>
             </div>
           </div>
         </div>
