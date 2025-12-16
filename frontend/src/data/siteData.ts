@@ -31,19 +31,19 @@ export const navLinks = [
 export const heroSlides = [
   {
     id: 1,
-    image: "/slider/slider-1.jpg",
+    image: "https://customer-assets.emergentagent.com/job_vet-revamp/artifacts/e2h3n534_wetnoseslider1.png",
     title: "Dostlarınıza Özel Bakım",
     subtitle: "Modern teknoloji ile sağlık takibi"
   },
   {
     id: 2,
-    image: "/slider/slider-2.jpg",
+    image: "https://customer-assets.emergentagent.com/job_vet-revamp/artifacts/7yt85qmy_wetnosesliderkedi.png",
     title: "Uzman Veteriner Ekibi",
     subtitle: "7/24 Acil Veteriner Hizmeti"
   },
   {
     id: 3,
-    image: "/slider/slider-3.jpg",
+    image: "https://customer-assets.emergentagent.com/job_vet-revamp/artifacts/e2h3n534_wetnoseslider1.png",
     title: "Minik Dostlarınız Güvende",
     subtitle: "Profesyonel sağlık hizmetleri"
   }
