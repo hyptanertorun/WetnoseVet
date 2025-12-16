@@ -41,7 +41,7 @@ export default function Header() {
             <motion.img
               src="https://customer-assets.emergentagent.com/job_vet-revamp/artifacts/hy1fmh1w_logo_anasayfa.png"
               alt="WETNOSE Veteriner Kliniği"
-              className="h-12 w-auto brightness-0 invert"
+              className="h-16 lg:h-20 w-auto brightness-0 invert"
               whileHover={{ scale: 1.05 }}
             />
           </motion.a>
