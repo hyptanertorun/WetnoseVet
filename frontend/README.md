@@ -1,70 +1,108 @@
-# Getting Started with Create React App
+# WETNOSE Veteriner Kliniği - Premium Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Modern, fütüristik ve Apple/Tesla tarzında tasarlanmış veteriner kliniği web sitesi.
 
-## Available Scripts
+## 🚀 Özellikler
 
-In the project directory, you can run:
+- **Hero Slider**: 3 slaytlı, parallax efektli slider
+- **Scroll Deneyimi**: GSAP ScrollTrigger ile pinned section, 3D kedi modeli ve organ overlay
+- **Hizmetler Carousel**: Netflix tarzı yatay scroll carousel
+- **Ekip Bölümü**: Hover efektli ekip kartları
+- **Foto Galeri**: Masonry layout ve lightbox
+- **İletişim**: Form, WhatsApp CTA ve harita
+- **Mobil Uyumlu**: Tüm ekran boyutlarına responsive
 
-### `npm start`
+## 🛠️ Teknolojiler
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- GSAP + ScrollTrigger
+- Framer Motion
+- Lucide Icons
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 📁 Proje Yapısı
 
-### `npm test`
+```
+src/
+├── app/
+│   ├── globals.css      # Global stiller
+│   ├── layout.tsx       # Root layout
+│   └── page.tsx         # Ana sayfa
+├── components/
+│   ├── Header.tsx       # Navigasyon
+│   ├── HeroSlider.tsx   # Ana slider
+│   ├── ScrollExperience.tsx  # Scroll deneyimi
+│   ├── OrganOverlay.tsx # Organ görseli
+│   ├── HUD.tsx          # Sağlık verileri
+│   ├── ServicesCarousel.tsx  # Hizmetler
+│   ├── Team.tsx         # Ekip
+│   ├── Gallery.tsx      # Galeri
+│   ├── ContactForm.tsx  # İletişim
+│   └── Footer.tsx       # Alt kısım
+├── data/
+│   └── siteData.ts      # Tüm site verileri
+└── lib/
+    └── utils.ts         # Yardımcı fonksiyonlar
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🖼️ Slider Görsellerini Değiştirme
 
-### `npm run build`
+1. `/public/slider/` klasöründeki dosyaları değiştirin:
+   - `slider-1.jpg`
+   - `slider-2.jpg`
+   - `slider-3.jpg`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Önerilen boyut: **1920x1080px** veya **16:9** en-boy oranı
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Slider başlıklarını değiştirmek için `/src/data/siteData.ts` dosyasındaki `heroSlides` array'ini düzenleyin.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🎨 Tema Konfigürasyonu
 
-### `npm run eject`
+Renk paleti ve temel stiller `/tailwind.config.ts` dosyasında tanımlıdır:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```typescript
+colors: {
+  medical: {
+    blue: '#00d4ff',    // Ana vurgu rengi
+    teal: '#00b4d8',    // İkincil vurgu
+    glow: 'rgba(0, 212, 255, 0.3)', // Glow efektleri
+  },
+  // ... diğer renkler
+}
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🔧 3D Model Değiştirme
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Mevcut kedi modeli SVG tabanlıdır. Gerçek 3D model eklemek için:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Spline kullanarak: `@splinetool/react-spline` paketi zaten yüklü
+2. `/src/components/ScrollExperience.tsx` dosyasındaki kedi SVG'sini Spline komponenti ile değiştirin
 
-## Learn More
+```tsx
+import Spline from '@splinetool/react-spline'
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+<Spline scene="https://prod.spline.design/YOUR_SCENE_ID/scene.splinecode" />
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📱 Responsive Breakpoints
 
-### Code Splitting
+- Mobile: < 640px
+- Tablet: 640px - 1024px
+- Desktop: > 1024px
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## ⚡ Performans İpuçları
 
-### Analyzing the Bundle Size
+- 3D toggle butonu ile düşük performanslı cihazlarda 3D'yi kapatın
+- `prefers-reduced-motion` desteği ile animasyonlar otomatik devre dışı kalır
+- Görseller lazy-load edilir
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🚀 Çalıştırma
 
-### Making a Progressive Web App
+```bash
+cd frontend
+yarn install
+yarn dev
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Site http://localhost:3000 adresinde çalışacaktır.
