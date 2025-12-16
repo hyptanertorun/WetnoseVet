@@ -1067,6 +1067,12 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
+.bg-white\/20 {
+  background-color: rgb(255 255 255 / 0.2);
+}
+.bg-white\/30 {
+  background-color: rgb(255 255 255 / 0.3);
+}
 .bg-\[radial-gradient\(ellipse_at_center\2c _var\(--tw-gradient-stops\)\)\] {
   background-image: radial-gradient(ellipse at center, var(--tw-gradient-stops));
 }
@@ -1754,6 +1760,9 @@ body {
 }
 .hover\:bg-white\/90:hover {
   background-color: rgb(255 255 255 / 0.9);
+}
+.hover\:bg-white\/40:hover {
+  background-color: rgb(255 255 255 / 0.4);
 }
 .hover\:text-white:hover {
   --tw-text-opacity: 1;

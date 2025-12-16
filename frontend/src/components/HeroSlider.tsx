@@ -136,18 +136,18 @@ export default function HeroSlider() {
               className="mt-12 flex items-center space-x-8"
             >
               <div className="text-center">
-                <span className="block text-3xl font-bold text-medical-blue">15+</span>
-                <span className="text-sm text-gray-500">Yıllık Deneyim</span>
+                <span className="block text-3xl font-bold text-medical-blue drop-shadow-lg">15+</span>
+                <span className="text-sm text-gray-300">Yıllık Deneyim</span>
               </div>
-              <div className="w-px h-12 bg-gray-200" />
+              <div className="w-px h-12 bg-white/30" />
               <div className="text-center">
-                <span className="block text-3xl font-bold text-medical-blue">10K+</span>
-                <span className="text-sm text-gray-500">Mutlu Dost</span>
+                <span className="block text-3xl font-bold text-medical-blue drop-shadow-lg">10K+</span>
+                <span className="text-sm text-gray-300">Mutlu Dost</span>
               </div>
-              <div className="w-px h-12 bg-gray-200" />
+              <div className="w-px h-12 bg-white/30" />
               <div className="text-center">
-                <span className="block text-3xl font-bold text-medical-blue">24/7</span>
-                <span className="text-sm text-gray-500">Acil Hizmet</span>
+                <span className="block text-3xl font-bold text-medical-blue drop-shadow-lg">24/7</span>
+                <span className="text-sm text-gray-300">Acil Hizmet</span>
               </div>
             </motion.div>
           </div>
@@ -158,10 +158,10 @@ export default function HeroSlider() {
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center space-x-4">
         <button
           onClick={prevSlide}
-          className="p-2 rounded-full glass hover:bg-white/90 transition-colors"
+          className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/40 transition-colors"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="w-5 h-5 text-gray-700" />
+          <ChevronLeft className="w-5 h-5 text-white" />
         </button>
         
         <div className="flex space-x-2">
