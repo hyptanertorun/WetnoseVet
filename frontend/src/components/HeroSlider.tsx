@@ -73,7 +73,7 @@ export default function HeroSlider() {
       </AnimatePresence>
 
       {/* Content Overlay - Left 35-40% Safe Zone */}
-      <div className="absolute inset-0 flex items-center">
+      <div className="absolute inset-0 flex items-center pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="max-w-xl">
             {/* Animated Tag */}
@@ -81,7 +81,7 @@ export default function HeroSlider() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center space-x-2 bg-medical-blue/10 rounded-full px-4 py-2 mb-6"
+              className="inline-flex items-center space-x-2 bg-medical-blue/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6"
             >
               <span className="w-2 h-2 rounded-full bg-medical-blue animate-pulse" />
               <span className="text-sm font-medium text-medical-blue">7/24 Acil Hizmet</span>
@@ -93,7 +93,7 @@ export default function HeroSlider() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4 drop-shadow-lg"
             >
               {heroSlides[currentSlide].title}
             </motion.h1>
@@ -104,7 +104,7 @@ export default function HeroSlider() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              className="text-lg sm:text-xl text-gray-600 mb-8"
+              className="text-lg sm:text-xl text-gray-200 mb-8"
             >
               {heroSlides[currentSlide].subtitle}
             </motion.p>
@@ -121,7 +121,7 @@ export default function HeroSlider() {
               </a>
               <a
                 href="#scroll-experience"
-                className="inline-flex items-center space-x-2 px-6 py-3 rounded-full border-2 border-gray-200 text-gray-700 font-medium hover:border-medical-blue hover:text-medical-blue transition-colors"
+                className="inline-flex items-center space-x-2 px-6 py-3 rounded-full border-2 border-white/30 text-white font-medium hover:border-medical-blue hover:bg-medical-blue/20 backdrop-blur-sm transition-colors"
               >
                 <Play className="w-4 h-4" />
                 <span>Keşfet</span>
