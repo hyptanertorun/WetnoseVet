@@ -1,298 +1,406 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
-import gsap from 'gsap'
-import { scrollExperienceSteps, hudDataGeneral, hudDataDigestion } from '@/data/siteData'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { hudDataGeneral, hudDataDigestion, scrollExperienceSteps } from '@/data/siteData'
+import TextReveal from './TextReveal'
+import MagneticButton from './MagneticButton'
 import { cn } from '@/lib/utils'
-import { Heart, Activity, Waves, Shield, Zap, Eye } from 'lucide-react'
+import { Heart, Activity, Waves, Shield, Zap, Eye, Cpu, Scan } from 'lucide-react'
 
 export default function ScrollExperience() {
-  const catRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [hudMode, setHudMode] = useState<'general' | 'digestion'>('general')
-  const [activeOrgan, setActiveOrgan] = useState<string | null>(null)
+  const [activeOrgan, setActiveOrgan] = useState<string | null>('heart')
+  const [scanProgress, setScanProgress] = useState(0)
 
   const hudData = hudMode === 'general' ? hudDataGeneral : hudDataDigestion
 
+  // Scan animation
   useEffect(() => {
-    const cat = catRef.current
-    if (cat) {
-      gsap.to(cat, {
-        scale: 1.02,
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      })
-    }
+    const interval = setInterval(() => {
+      setScanProgress((prev) => (prev >= 100 ? 0 : prev + 1))
+    }, 50)
+    return () => clearInterval(interval)
   }, [])
 
   const organs = [
-    { id: 'heart', name: 'Kalp', icon: Heart, color: '#ef4444', position: 'top-[35%] left-[45%]' },
-    { id: 'lungs', name: 'Akciğer', icon: Waves, color: '#3b82f6', position: 'top-[40%] left-[35%]' },
-    { id: 'stomach', name: 'Mide', icon: Activity, color: '#22c55e', position: 'top-[55%] left-[48%]' },
+    { id: 'heart', name: 'Kalp', icon: Heart, color: '#ef4444', value: '72 BPM', description: 'Normal ritim' },
+    { id: 'lungs', name: 'Akciğer', icon: Waves, color: '#3b82f6', value: '%99 O₂', description: 'Mükemmel' },
+    { id: 'stomach', name: 'Sindirim', icon: Activity, color: '#22c55e', value: 'Aktif', description: 'Sağlıklı' },
   ]
 
   return (
     <section
       id="scroll-experience"
-      className="relative bg-gradient-to-b from-gray-900 via-[#0a1628] to-gray-900 overflow-hidden"
+      ref={containerRef}
+      className="relative min-h-screen bg-[#030712] overflow-hidden"
     >
       {/* Animated Background */}
       <div className="absolute inset-0">
+        {/* Gradient Orbs */}
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-medical-blue/20 rounded-full blur-[150px] animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-teal-500/15 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[200px]" />
+        
         {/* Grid Pattern */}
         <div 
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(0, 212, 255, 0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(0, 212, 255, 0.3) 1px, transparent 1px)
+              linear-gradient(rgba(0, 212, 255, 1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 212, 255, 1) 1px, transparent 1px)
             `,
-            backgroundSize: '60px 60px',
+            backgroundSize: '80px 80px',
           }}
         />
-        {/* Floating Orbs */}
-        <div className="absolute top-20 left-20 w-96 h-96 bg-medical-blue/20 rounded-full blur-[100px] animate-pulse" />
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-teal-500/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px]" />
+
+        {/* Scan Line */}
+        <motion.div
+          className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-medical-blue to-transparent opacity-50"
+          style={{ top: `${scanProgress}%` }}
+        />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          transition={{ duration: 0.8 }}
+          className="text-center mb-20"
         >
-          <div className="inline-flex items-center space-x-2 bg-medical-blue/10 border border-medical-blue/30 rounded-full px-4 py-2 mb-6">
-            <Zap className="w-4 h-4 text-medical-blue" />
-            <span className="text-sm font-medium text-medical-blue">Gelişmiş Teknoloji</span>
-          </div>
-          <h2 className="text-4xl lg:text-6xl font-bold text-white mb-4">
-            Holografik <span className="text-transparent bg-clip-text bg-gradient-to-r from-medical-blue to-teal-400">Sağlık Taraması</span>
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center space-x-2 bg-medical-blue/10 border border-medical-blue/30 rounded-full px-5 py-2.5 mb-8"
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+            >
+              <Cpu className="w-4 h-4 text-medical-blue" />
+            </motion.div>
+            <span className="text-sm font-medium text-medical-blue">AI Destekli Tarama</span>
+          </motion.div>
+
+          {/* Title */}
+          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            <TextReveal delay={0.2}>Holografik</TextReveal>
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-medical-blue via-teal-400 to-cyan-300">
+              <TextReveal delay={0.4}>Sağlık Taraması</TextReveal>
+            </span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Modern teknolojimiz ile dostunuzun sağlık durumunu gerçek zamanlı analiz ediyoruz
-          </p>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6 }}
+            className="text-gray-400 text-lg max-w-2xl mx-auto"
+          >
+            Yapay zeka destekli sistemimiz ile dostunuzun sağlık durumunu saniyeler içinde analiz ediyoruz
+          </motion.p>
         </motion.div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left - 3D Cat Visualization */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Left - 3D Visualization */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -100 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="relative"
+            transition={{ duration: 0.8 }}
+            className="lg:col-span-7 relative"
           >
-            {/* Holographic Ring */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[400px] h-[400px] rounded-full border border-medical-blue/30 animate-spin" style={{ animationDuration: '20s' }} />
-              <div className="absolute w-[350px] h-[350px] rounded-full border border-teal-500/20 animate-spin" style={{ animationDuration: '15s', animationDirection: 'reverse' }} />
-              <div className="absolute w-[300px] h-[300px] rounded-full border border-medical-blue/40" />
-            </div>
-
-            {/* Cat Container */}
-            <div ref={catRef} className="relative w-full aspect-square max-w-md mx-auto">
-              {/* Premium 3D Cat SVG */}
-              <svg viewBox="0 0 400 400" className="w-full h-full">
-                <defs>
-                  <linearGradient id="catBodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#1e293b" />
-                    <stop offset="50%" stopColor="#334155" />
-                    <stop offset="100%" stopColor="#1e293b" />
-                  </linearGradient>
-                  <linearGradient id="glowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#00d4ff" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.4" />
-                  </linearGradient>
-                  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="4" result="coloredBlur" />
-                    <feMerge>
-                      <feMergeNode in="coloredBlur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                  <filter id="softGlow">
-                    <feGaussianBlur stdDeviation="8" result="glow" />
-                    <feMerge>
-                      <feMergeNode in="glow" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                {/* Body */}
-                <ellipse cx="200" cy="260" rx="90" ry="70" fill="url(#catBodyGradient)" filter="url(#softGlow)" />
-                
-                {/* Head */}
-                <circle cx="200" cy="150" r="70" fill="url(#catBodyGradient)" filter="url(#softGlow)" />
-                
-                {/* Ears */}
-                <path d="M135 100 L155 145 L115 125 Z" fill="url(#catBodyGradient)" />
-                <path d="M265 100 L245 145 L285 125 Z" fill="url(#catBodyGradient)" />
-                <path d="M140 105 L155 135 L125 120 Z" fill="#475569" />
-                <path d="M260 105 L245 135 L275 120 Z" fill="#475569" />
-                
-                {/* Eyes - Glowing */}
-                <ellipse cx="170" cy="140" rx="15" ry="18" fill="#00d4ff" filter="url(#glow)" className="animate-pulse" />
-                <ellipse cx="230" cy="140" rx="15" ry="18" fill="#00d4ff" filter="url(#glow)" className="animate-pulse" />
-                <ellipse cx="170" cy="140" rx="7" ry="10" fill="#0f172a" />
-                <ellipse cx="230" cy="140" rx="7" ry="10" fill="#0f172a" />
-                <circle cx="173" cy="136" r="3" fill="white" />
-                <circle cx="233" cy="136" r="3" fill="white" />
-                
-                {/* Nose */}
-                <path d="M200 165 L193 178 L207 178 Z" fill="#f472b6" />
-                
-                {/* Mouth */}
-                <path d="M200 178 Q188 192 180 185" stroke="#64748b" strokeWidth="2" fill="none" />
-                <path d="M200 178 Q212 192 220 185" stroke="#64748b" strokeWidth="2" fill="none" />
-                
-                {/* Whiskers */}
-                <g stroke="#94a3b8" strokeWidth="1.5" opacity="0.7">
-                  <line x1="160" y1="170" x2="110" y2="160" />
-                  <line x1="160" y1="178" x2="110" y2="178" />
-                  <line x1="160" y1="186" x2="110" y2="196" />
-                  <line x1="240" y1="170" x2="290" y2="160" />
-                  <line x1="240" y1="178" x2="290" y2="178" />
-                  <line x1="240" y1="186" x2="290" y2="196" />
-                </g>
-                
-                {/* Paws */}
-                <ellipse cx="140" cy="320" rx="25" ry="18" fill="url(#catBodyGradient)" />
-                <ellipse cx="260" cy="320" rx="25" ry="18" fill="url(#catBodyGradient)" />
-                
-                {/* Tail */}
-                <path 
-                  d="M290 260 Q340 250 330 200 Q320 160 350 140" 
-                  stroke="url(#catBodyGradient)" 
-                  strokeWidth="20" 
-                  strokeLinecap="round"
-                  fill="none"
-                />
-
-                {/* Holographic Scan Lines */}
-                <g opacity="0.6">
-                  <line x1="100" y1="120" x2="300" y2="120" stroke="url(#glowGradient)" strokeWidth="1" strokeDasharray="5,5" className="animate-pulse" />
-                  <line x1="100" y1="180" x2="300" y2="180" stroke="url(#glowGradient)" strokeWidth="1" strokeDasharray="5,5" className="animate-pulse" style={{ animationDelay: '0.3s' }} />
-                  <line x1="100" y1="240" x2="300" y2="240" stroke="url(#glowGradient)" strokeWidth="1" strokeDasharray="5,5" className="animate-pulse" style={{ animationDelay: '0.6s' }} />
-                  <line x1="100" y1="300" x2="300" y2="300" stroke="url(#glowGradient)" strokeWidth="1" strokeDasharray="5,5" className="animate-pulse" style={{ animationDelay: '0.9s' }} />
-                </g>
-
-                {/* Organ Points */}
-                {organs.map((organ) => (
-                  <g key={organ.id} className="cursor-pointer" onClick={() => setActiveOrgan(activeOrgan === organ.id ? null : organ.id)}>
-                    <circle 
-                      cx={organ.id === 'heart' ? 200 : organ.id === 'lungs' ? 160 : 200} 
-                      cy={organ.id === 'heart' ? 220 : organ.id === 'lungs' ? 230 : 270} 
-                      r={activeOrgan === organ.id ? 12 : 8} 
-                      fill={organ.color} 
-                      filter="url(#glow)"
-                      className="transition-all duration-300"
-                    />
-                    {activeOrgan === organ.id && (
-                      <circle 
-                        cx={organ.id === 'heart' ? 200 : organ.id === 'lungs' ? 160 : 200} 
-                        cy={organ.id === 'heart' ? 220 : organ.id === 'lungs' ? 230 : 270} 
-                        r="20" 
-                        fill="none"
-                        stroke={organ.color}
-                        strokeWidth="2"
-                        className="animate-ping"
-                      />
-                    )}
-                  </g>
-                ))}
-              </svg>
-
-              {/* Floating Labels */}
-              {organs.map((organ, index) => (
+            {/* Holographic Container */}
+            <div className="relative aspect-square max-w-2xl mx-auto">
+              {/* Rotating Rings */}
+              <div className="absolute inset-0 flex items-center justify-center">
                 <motion.div
-                  key={organ.id}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: activeOrgan === organ.id ? 1 : 0.6, scale: activeOrgan === organ.id ? 1.1 : 1 }}
-                  className={cn(
-                    'absolute px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1.5 cursor-pointer transition-all',
-                    activeOrgan === organ.id ? 'bg-white/20 backdrop-blur-md' : 'bg-white/10 backdrop-blur-sm',
-                    organ.position
-                  )}
-                  onClick={() => setActiveOrgan(activeOrgan === organ.id ? null : organ.id)}
-                >
-                  <organ.icon className="w-3 h-3" style={{ color: organ.color }} />
-                  <span className="text-white">{organ.name}</span>
-                </motion.div>
-              ))}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+                  className="absolute w-full h-full rounded-full border border-medical-blue/20"
+                  style={{ borderStyle: 'dashed' }}
+                />
+                <motion.div
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+                  className="absolute w-[85%] h-[85%] rounded-full border border-teal-500/20"
+                />
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                  className="absolute w-[70%] h-[70%] rounded-full border border-cyan-400/30"
+                />
+              </div>
+
+              {/* Central Glow */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="w-64 h-64 rounded-full bg-medical-blue/20 blur-3xl"
+                />
+              </div>
+
+              {/* 3D Cat Hologram */}
+              <div className="relative w-full h-full flex items-center justify-center">
+                <svg viewBox="0 0 400 400" className="w-[80%] h-[80%]">
+                  <defs>
+                    <linearGradient id="holoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#00d4ff" stopOpacity="0.8" />
+                      <stop offset="50%" stopColor="#14b8a6" stopOpacity="0.6" />
+                      <stop offset="100%" stopColor="#06b6d4" stopOpacity="0.8" />
+                    </linearGradient>
+                    <filter id="holoGlow" x="-50%" y="-50%" width="200%" height="200%">
+                      <feGaussianBlur stdDeviation="8" result="coloredBlur" />
+                      <feMerge>
+                        <feMergeNode in="coloredBlur" />
+                        <feMergeNode in="coloredBlur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                    <filter id="scanLine">
+                      <feGaussianBlur stdDeviation="2" />
+                    </filter>
+                  </defs>
+
+                  {/* Holographic Cat - Wireframe Style */}
+                  <g filter="url(#holoGlow)" className="animate-pulse" style={{ animationDuration: '3s' }}>
+                    {/* Body outline */}
+                    <ellipse cx="200" cy="250" rx="80" ry="60" fill="none" stroke="url(#holoGradient)" strokeWidth="1.5" />
+                    <ellipse cx="200" cy="250" rx="70" ry="50" fill="none" stroke="url(#holoGradient)" strokeWidth="0.5" opacity="0.5" />
+                    
+                    {/* Head */}
+                    <circle cx="200" cy="140" r="60" fill="none" stroke="url(#holoGradient)" strokeWidth="1.5" />
+                    <circle cx="200" cy="140" r="50" fill="none" stroke="url(#holoGradient)" strokeWidth="0.5" opacity="0.5" />
+                    
+                    {/* Ears */}
+                    <path d="M145 95 L165 130 L125 115 Z" fill="none" stroke="url(#holoGradient)" strokeWidth="1.5" />
+                    <path d="M255 95 L235 130 L275 115 Z" fill="none" stroke="url(#holoGradient)" strokeWidth="1.5" />
+                    
+                    {/* Eyes - Glowing */}
+                    <circle cx="175" cy="135" r="12" fill="#00d4ff" opacity="0.8">
+                      <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="225" cy="135" r="12" fill="#00d4ff" opacity="0.8">
+                      <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="175" cy="135" r="5" fill="#030712" />
+                    <circle cx="225" cy="135" r="5" fill="#030712" />
+                    
+                    {/* Nose */}
+                    <path d="M200 155 L195 165 L205 165 Z" fill="#14b8a6" opacity="0.8" />
+                    
+                    {/* Whiskers */}
+                    <g stroke="url(#holoGradient)" strokeWidth="0.8" opacity="0.6">
+                      <line x1="165" y1="160" x2="120" y2="155" />
+                      <line x1="165" y1="165" x2="120" y2="165" />
+                      <line x1="165" y1="170" x2="120" y2="175" />
+                      <line x1="235" y1="160" x2="280" y2="155" />
+                      <line x1="235" y1="165" x2="280" y2="165" />
+                      <line x1="235" y1="170" x2="280" y2="175" />
+                    </g>
+                    
+                    {/* Tail */}
+                    <path d="M280 250 Q320 240 310 200 Q300 170 330 150" fill="none" stroke="url(#holoGradient)" strokeWidth="1.5" strokeLinecap="round" />
+                    
+                    {/* Paws */}
+                    <ellipse cx="150" cy="305" rx="20" ry="12" fill="none" stroke="url(#holoGradient)" strokeWidth="1.5" />
+                    <ellipse cx="250" cy="305" rx="20" ry="12" fill="none" stroke="url(#holoGradient)" strokeWidth="1.5" />
+                  </g>
+
+                  {/* Organ Hotspots */}
+                  {organs.map((organ, i) => {
+                    const positions = { heart: { x: 200, y: 220 }, lungs: { x: 160, y: 230 }, stomach: { x: 200, y: 265 } }
+                    const pos = positions[organ.id as keyof typeof positions]
+                    return (
+                      <g key={organ.id}>
+                        <motion.circle
+                          cx={pos.x}
+                          cy={pos.y}
+                          r={activeOrgan === organ.id ? 15 : 10}
+                          fill={organ.color}
+                          opacity={activeOrgan === organ.id ? 0.9 : 0.6}
+                          className="cursor-pointer"
+                          whileHover={{ scale: 1.3 }}
+                          onClick={() => setActiveOrgan(organ.id)}
+                          filter="url(#holoGlow)"
+                        />
+                        {activeOrgan === organ.id && (
+                          <motion.circle
+                            cx={pos.x}
+                            cy={pos.y}
+                            r="25"
+                            fill="none"
+                            stroke={organ.color}
+                            strokeWidth="2"
+                            initial={{ scale: 0.5, opacity: 1 }}
+                            animate={{ scale: 1.5, opacity: 0 }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                          />
+                        )}
+                      </g>
+                    )
+                  })}
+
+                  {/* Scan Lines */}
+                  <g opacity="0.3">
+                    {[...Array(8)].map((_, i) => (
+                      <line
+                        key={i}
+                        x1="50"
+                        y1={80 + i * 40}
+                        x2="350"
+                        y2={80 + i * 40}
+                        stroke="url(#holoGradient)"
+                        strokeWidth="0.5"
+                        strokeDasharray="10,10"
+                      >
+                        <animate attributeName="stroke-dashoffset" from="0" to="20" dur="1s" repeatCount="indefinite" />
+                      </line>
+                    ))}
+                  </g>
+                </svg>
+              </div>
+
+              {/* Floating Organ Labels */}
+              {organs.map((organ, index) => {
+                const positions = [
+                  'top-[30%] -left-4 lg:left-0',
+                  'top-[45%] -right-4 lg:right-0',
+                  'bottom-[25%] -left-4 lg:left-0',
+                ]
+                return (
+                  <motion.div
+                    key={organ.id}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.5 + index * 0.2 }}
+                    onClick={() => setActiveOrgan(organ.id)}
+                    className={cn(
+                      'absolute cursor-pointer transition-all duration-300',
+                      positions[index],
+                      activeOrgan === organ.id ? 'scale-110' : 'opacity-70 hover:opacity-100'
+                    )}
+                  >
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      className={cn(
+                        'flex items-center space-x-3 px-4 py-3 rounded-xl backdrop-blur-xl border transition-all',
+                        activeOrgan === organ.id
+                          ? 'bg-white/10 border-white/30 shadow-lg'
+                          : 'bg-white/5 border-white/10'
+                      )}
+                      style={{
+                        boxShadow: activeOrgan === organ.id ? `0 0 30px ${organ.color}30` : 'none'
+                      }}
+                    >
+                      <div
+                        className="w-10 h-10 rounded-lg flex items-center justify-center"
+                        style={{ backgroundColor: `${organ.color}20` }}
+                      >
+                        <organ.icon className="w-5 h-5" style={{ color: organ.color }} />
+                      </div>
+                      <div>
+                        <p className="text-white font-semibold text-sm">{organ.name}</p>
+                        <p className="text-xs" style={{ color: organ.color }}>{organ.value}</p>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                )
+              })}
             </div>
 
             {/* Mode Toggle */}
-            <div className="flex justify-center mt-8 space-x-3">
-              <button
-                onClick={() => setHudMode('general')}
-                className={cn(
-                  'px-5 py-2.5 rounded-full text-sm font-medium transition-all',
-                  hudMode === 'general'
-                    ? 'bg-medical-blue text-white shadow-lg shadow-medical-blue/30'
-                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
-                )}
-              >
-                <Eye className="w-4 h-4 inline mr-2" />
-                Genel Tarama
-              </button>
-              <button
-                onClick={() => setHudMode('digestion')}
-                className={cn(
-                  'px-5 py-2.5 rounded-full text-sm font-medium transition-all',
-                  hudMode === 'digestion'
-                    ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30'
-                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
-                )}
-              >
-                <Activity className="w-4 h-4 inline mr-2" />
-                Sindirim Analizi
-              </button>
+            <div className="flex justify-center mt-8 space-x-4">
+              {[
+                { mode: 'general', icon: Eye, label: 'Genel Tarama' },
+                { mode: 'digestion', icon: Activity, label: 'Sindirim Analizi' },
+              ].map((item) => (
+                <MagneticButton
+                  key={item.mode}
+                  onClick={() => setHudMode(item.mode as 'general' | 'digestion')}
+                  variant={hudMode === item.mode ? 'primary' : 'secondary'}
+                  className="!px-5 !py-3"
+                >
+                  <item.icon className="w-4 h-4 mr-2" />
+                  {item.label}
+                </MagneticButton>
+              ))}
             </div>
           </motion.div>
 
           {/* Right - HUD Panel */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 100 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-6"
+            transition={{ duration: 0.8 }}
+            className="lg:col-span-5 space-y-6"
           >
-            {/* HUD Title */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-green-400 text-sm font-medium">Canlı Tarama Aktif</span>
+            {/* Status Card */}
+            <motion.div
+              className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 p-6"
+              whileHover={{ borderColor: 'rgba(0, 212, 255, 0.3)' }}
+            >
+              {/* Animated border */}
+              <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                <motion.div
+                  className="absolute inset-0"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.3), transparent)',
+                  }}
+                  animate={{ x: ['-100%', '100%'] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">{hudData.title}</h3>
-              <p className="text-gray-400 text-sm">Gerçek zamanlı sağlık verisi analizi</p>
-            </div>
+
+              <div className="relative">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <motion.div
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                      className="w-3 h-3 rounded-full bg-green-500"
+                    />
+                    <span className="text-green-400 text-sm font-medium">Canlı Tarama Aktif</span>
+                  </div>
+                  <Scan className="w-5 h-5 text-medical-blue animate-pulse" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-1">{hudData.title}</h3>
+                <p className="text-gray-400 text-sm">Gerçek zamanlı sağlık analizi</p>
+              </div>
+            </motion.div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-4">
               {hudData.stats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl p-5 hover:border-medical-blue/50 transition-all group"
+                  transition={{ delay: 0.2 + index * 0.1 }}
+                  whileHover={{ scale: 1.02, borderColor: 'rgba(0, 212, 255, 0.5)' }}
+                  className="relative overflow-hidden rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 p-5 group"
                 >
                   <p className="text-gray-400 text-sm mb-2">{stat.label}</p>
                   <p className="text-2xl font-bold text-white group-hover:text-medical-blue transition-colors">
                     {stat.value}
                   </p>
-                  <div className="mt-3 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="mt-3 h-1.5 bg-white/10 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       whileInView={{ width: '100%' }}
                       viewport={{ once: true }}
-                      transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
+                      transition={{ duration: 1.5, delay: 0.5 + index * 0.1 }}
                       className="h-full bg-gradient-to-r from-medical-blue to-teal-400 rounded-full"
                     />
                   </div>
@@ -300,9 +408,18 @@ export default function ScrollExperience() {
               ))}
             </div>
 
-            {/* Feature List */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
-              <h4 className="text-white font-semibold mb-4">Tarama Özellikleri</h4>
+            {/* Features List */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6 }}
+              className="rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 p-6"
+            >
+              <h4 className="text-white font-semibold mb-4 flex items-center">
+                <Shield className="w-5 h-5 text-medical-blue mr-2" />
+                Tarama Kapsamı
+              </h4>
               <div className="space-y-3">
                 {scrollExperienceSteps.map((step, index) => (
                   <motion.div
@@ -310,20 +427,17 @@ export default function ScrollExperience() {
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    className="flex items-start space-x-3"
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    className="flex items-center space-x-3 text-sm"
                   >
-                    <div className="w-6 h-6 rounded-full bg-medical-blue/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Shield className="w-3 h-3 text-medical-blue" />
+                    <div className="w-6 h-6 rounded-full bg-medical-blue/20 flex items-center justify-center">
+                      <Zap className="w-3 h-3 text-medical-blue" />
                     </div>
-                    <div>
-                      <p className="text-white font-medium text-sm">{step.title}</p>
-                      <p className="text-gray-500 text-xs">{step.description}</p>
-                    </div>
+                    <span className="text-gray-300">{step.title}</span>
                   </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
