@@ -27,7 +27,7 @@ const TestimonialsSection = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
   }, []);
 
@@ -35,106 +35,96 @@ const TestimonialsSection = () => {
     <section 
       id="yorumlar" 
       ref={sectionRef}
-      className="relative min-h-screen bg-gray-50 overflow-hidden flex items-center"
+      className="py-24 lg:py-32 bg-white"
     >
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-teal-100 rounded-full blur-3xl opacity-50" />
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-purple-100 rounded-full blur-3xl opacity-50" />
-      </div>
-
-      {/* Large Quote */}
-      <Quote className="absolute top-20 left-[10%] w-64 h-64 text-teal-100 -rotate-12" />
-
-      <div className="relative w-full max-w-7xl mx-auto px-8 py-32">
+      <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left - Header */}
           <div className={`transition-all duration-1000 ${
-            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
           }`}>
             <div className="flex items-center gap-4 mb-6">
-              <div className="h-px w-20 bg-teal-500" />
-              <span className="text-teal-600 text-sm tracking-[0.3em] uppercase font-medium">Yorumlar</span>
+              <div className="h-px w-8 bg-teal-500/50" />
+              <span className="text-teal-600 text-xs tracking-[0.25em] uppercase font-medium">Yorumlar</span>
             </div>
 
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 leading-none mb-8">
-              MUTLU
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-teal-600">
-                DOSTLAR
-              </span>
+            <h2 className="text-3xl md:text-4xl font-light text-gray-800 mb-6">
+              Mutlu <span className="font-semibold">Hasta Sahipleri</span>
             </h2>
 
-            <p className="text-xl text-gray-600 max-w-lg leading-relaxed">
+            <p className="text-gray-500 font-light leading-relaxed mb-10">
               Binlerce mutlu hasta sahibi ve dostları Wetnose ailesinin bir parçası.
             </p>
 
             {/* Navigation */}
-            <div className="flex items-center gap-4 mt-12">
+            <div className="flex items-center gap-4">
               <button
                 onClick={() => setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
-                className="w-14 h-14 rounded-full border-2 border-gray-300 flex items-center justify-center text-gray-600 hover:border-teal-500 hover:text-teal-500 transition-colors"
+                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:border-teal-500 hover:text-teal-500 transition-colors"
               >
-                <ChevronLeft size={24} />
+                <ChevronLeft size={18} strokeWidth={1.5} />
               </button>
               <button
                 onClick={() => setActiveIndex((prev) => (prev + 1) % testimonials.length)}
-                className="w-14 h-14 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors"
+                className="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center text-white hover:bg-teal-700 transition-colors"
               >
-                <ChevronRight size={24} />
+                <ChevronRight size={18} strokeWidth={1.5} />
               </button>
-              <span className="ml-4 text-gray-400 font-mono">
+              <span className="text-gray-400 text-sm font-light ml-2">
                 {String(activeIndex + 1).padStart(2, '0')} / {String(testimonials.length).padStart(2, '0')}
               </span>
             </div>
           </div>
 
-          {/* Right - Testimonial Cards */}
-          <div className={`relative h-[500px] transition-all duration-1000 delay-300 ${
-            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+          {/* Right - Testimonial Card */}
+          <div className={`relative transition-all duration-1000 delay-200 ${
+            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
           }`}>
-            {testimonials.map((testimonial, index) => {
-              const isActive = index === activeIndex;
-              const isPrev = index === (activeIndex - 1 + testimonials.length) % testimonials.length;
-              const isNext = index === (activeIndex + 1) % testimonials.length;
+            <div className="relative bg-gray-50 rounded-2xl p-8 lg:p-10">
+              {/* Quote Icon */}
+              <Quote size={32} strokeWidth={1} className="text-teal-200 mb-6" />
 
-              return (
-                <div
-                  key={testimonial.id}
-                  className={`absolute inset-0 transition-all duration-700 ease-out ${
-                    isActive ? 'opacity-100 z-10 translate-x-0 scale-100' :
-                    isPrev ? 'opacity-40 z-0 -translate-x-20 scale-95' :
-                    isNext ? 'opacity-40 z-0 translate-x-20 scale-95' :
-                    'opacity-0 z-0 translate-y-10'
-                  }`}
-                >
-                  <div className="h-full bg-white rounded-3xl shadow-2xl p-10 flex flex-col justify-center">
-                    {/* Stars */}
-                    <div className="flex gap-1 mb-8">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} size={28} className="fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
+              {/* Testimonials */}
+              <div className="relative min-h-[200px]">
+                {testimonials.map((testimonial, index) => (
+                  <div
+                    key={testimonial.id}
+                    className={`transition-all duration-500 ${
+                      index === activeIndex 
+                        ? 'opacity-100 translate-y-0' 
+                        : 'opacity-0 absolute top-0 translate-y-4'
+                    }`}
+                  >
+                    {index === activeIndex && (
+                      <>
+                        {/* Stars */}
+                        <div className="flex gap-1 mb-6">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star key={i} size={16} className="fill-amber-400 text-amber-400" />
+                          ))}
+                        </div>
 
-                    {/* Quote */}
-                    <p className="text-2xl md:text-3xl text-gray-800 leading-relaxed mb-10 italic font-light">
-                      "{testimonial.comment}"
-                    </p>
+                        {/* Quote */}
+                        <p className="text-lg text-gray-700 leading-relaxed mb-8 font-light italic">
+                          "{testimonial.comment}"
+                        </p>
 
-                    {/* Author */}
-                    <div className="flex items-center gap-4 mt-auto">
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-2xl font-bold">
-                        {testimonial.name.charAt(0)}
-                      </div>
-                      <div>
-                        <h4 className="text-xl font-bold text-gray-900">{testimonial.name}</h4>
-                        <p className="text-teal-600">{testimonial.pet}</p>
-                      </div>
-                    </div>
+                        {/* Author */}
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 text-lg font-medium">
+                            {testimonial.name.charAt(0)}
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-800">{testimonial.name}</h4>
+                            <p className="text-teal-600 text-xs">{testimonial.pet}</p>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
-                </div>
-              );
-            })}
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
