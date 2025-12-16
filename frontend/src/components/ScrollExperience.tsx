@@ -3,16 +3,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { scrollExperienceSteps } from '@/data/siteData'
 import OrganOverlay from './OrganOverlay'
 import HUD from './HUD'
 import { cn } from '@/lib/utils'
-
-// Register GSAP plugin
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
 
 export default function ScrollExperience() {
   const containerRef = useRef<HTMLDivElement>(null)
