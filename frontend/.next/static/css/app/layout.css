@@ -867,6 +867,9 @@ video {
 .h-\[85\%\] {
   height: 85%;
 }
+.h-11 {
+  height: 2.75rem;
+}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -944,6 +947,9 @@ video {
 }
 .w-\[85\%\] {
   width: 85%;
+}
+.w-11 {
+  width: 2.75rem;
 }
 .max-w-2xl {
   max-width: 42rem;
@@ -1050,6 +1056,9 @@ video {
 .justify-center {
   justify-content: center;
 }
+.\!justify-center {
+  justify-content: center !important;
+}
 .justify-between {
   justify-content: space-between;
 }
@@ -1117,6 +1126,11 @@ video {
   margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
 }
+.space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.25rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.25rem * calc(1 - var(--tw-space-x-reverse)));
+}
 .overflow-hidden {
   overflow: hidden;
 }
@@ -1143,6 +1157,9 @@ video {
 }
 .border-t {
   border-top-width: 1px;
+}
+.border-b {
+  border-bottom-width: 1px;
 }
 .border-gray-100 {
   --tw-border-opacity: 1;
@@ -1254,6 +1271,9 @@ video {
 }
 .bg-teal-500\/15 {
   background-color: rgb(20 184 166 / 0.15);
+}
+.bg-black\/80 {
+  background-color: rgb(0 0 0 / 0.8);
 }
 .bg-gradient-to-b {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
@@ -1459,6 +1479,10 @@ video {
   padding-top: 8rem;
   padding-bottom: 8rem;
 }
+.\!py-2\.5 {
+  padding-top: 0.625rem !important;
+  padding-bottom: 0.625rem !important;
+}
 .pb-12 {
   padding-bottom: 3rem;
 }
@@ -1476,6 +1500,9 @@ video {
 }
 .pt-4 {
   padding-top: 1rem;
+}
+.pt-6 {
+  padding-top: 1.5rem;
 }
 .text-left {
   text-align: left;
@@ -1517,6 +1544,10 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+.\!text-sm {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
 }
 .font-bold {
   font-weight: 700;
@@ -2072,6 +2103,10 @@ body {
 }
 .hover\:bg-white\/50:hover {
   background-color: rgb(255 255 255 / 0.5);
+}
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 .hover\:opacity-100:hover {
   opacity: 1;

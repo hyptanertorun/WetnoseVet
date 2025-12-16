@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Phone } from 'lucide-react'
+import { Menu, X, Phone, Sparkles } from 'lucide-react'
 import { siteInfo, navLinks } from '@/data/siteData'
+import MagneticButton from './MagneticButton'
 import { cn } from '@/lib/utils'
 
 export default function Header() {
@@ -23,7 +24,7 @@ export default function Header() {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
         isScrolled
-          ? 'glass py-3 shadow-lg'
+          ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 py-3'
           : 'bg-transparent py-5'
       )}
     >
@@ -34,26 +35,34 @@ export default function Header() {
             href="#hero"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center space-x-3"
+            className="flex items-center space-x-3 group"
+            data-cursor="pointer"
           >
             <div className="relative">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-medical-blue to-medical-teal flex items-center justify-center">
-                <span className="text-white font-bold text-lg">W</span>
-              </div>
-              <div className="absolute -inset-1 rounded-full bg-medical-blue/20 animate-pulse-ring" />
+              <motion.div 
+                className="w-11 h-11 rounded-xl bg-gradient-to-br from-medical-blue to-teal-500 flex items-center justify-center"
+                whileHover={{ scale: 1.1, rotate: 5 }}
+              >
+                <span className="text-white font-bold text-xl">W</span>
+              </motion.div>
+              <motion.div
+                animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute inset-0 rounded-xl bg-medical-blue/30"
+              />
             </div>
             <div>
-              <span className="text-xl font-bold tracking-tight text-gray-900">
+              <span className="text-xl font-bold tracking-tight text-white">
                 {siteInfo.name}
               </span>
-              <span className="block text-[10px] text-gray-500 tracking-widest uppercase">
+              <span className="block text-[10px] text-gray-400 tracking-widest uppercase">
                 {siteInfo.tagline}
               </span>
             </div>
           </motion.a>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-1">
             {navLinks.map((link, index) => (
               <motion.a
                 key={link.name}
@@ -61,47 +70,45 @@ export default function Header() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="text-sm font-medium text-gray-600 hover:text-medical-blue transition-colors relative group"
+                className="relative px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors group"
+                data-cursor="pointer"
               >
                 {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-medical-blue transition-all duration-300 group-hover:w-full" />
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-medical-blue to-teal-400 transition-all duration-300 group-hover:w-full" />
               </motion.a>
             ))}
           </nav>
 
-          {/* CTA Button */}
+          {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
             <motion.a
               href={`tel:${siteInfo.phone.replace(/\s/g, '')}`}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="flex items-center space-x-2 text-sm text-gray-600 hover:text-medical-blue transition-colors"
+              className="flex items-center space-x-2 text-sm text-gray-300 hover:text-medical-blue transition-colors"
+              data-cursor="pointer"
             >
               <Phone className="w-4 h-4" />
               <span>{siteInfo.phone}</span>
             </motion.a>
-            <motion.a
-              href="#contact"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="btn-premium text-sm"
-            >
+            <MagneticButton href="#contact" variant="primary" className="!py-2.5 !px-5 !text-sm">
               Randevu Al
-            </motion.a>
+            </MagneticButton>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
+          <motion.button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            whileTap={{ scale: 0.95 }}
+            className="lg:hidden p-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/10 text-white"
+            data-cursor="pointer"
           >
             {isMobileMenuOpen ? (
-              <X className="w-6 h-6 text-gray-600" />
+              <X className="w-6 h-6" />
             ) : (
-              <Menu className="w-6 h-6 text-gray-600" />
+              <Menu className="w-6 h-6" />
             )}
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -112,32 +119,37 @@ export default function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden glass mt-2 mx-4 rounded-2xl overflow-hidden"
+            className="lg:hidden overflow-hidden"
           >
-            <nav className="py-4 px-6 space-y-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-gray-600 hover:text-medical-blue transition-colors"
-                >
-                  {link.name}
-                </a>
-              ))}
-              <div className="pt-4 border-t border-gray-200">
+            <div className="mt-4 mx-4 p-6 rounded-2xl bg-black/90 backdrop-blur-xl border border-white/10">
+              <nav className="space-y-4">
+                {navLinks.map((link, index) => (
+                  <motion.a
+                    key={link.name}
+                    href={link.href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block text-gray-300 hover:text-white transition-colors py-2"
+                  >
+                    {link.name}
+                  </motion.a>
+                ))}
+              </nav>
+              <div className="mt-6 pt-6 border-t border-white/10 space-y-4">
                 <a
                   href={`tel:${siteInfo.phone.replace(/\s/g, '')}`}
-                  className="flex items-center space-x-2 text-gray-600 mb-4"
+                  className="flex items-center space-x-2 text-gray-300"
                 >
                   <Phone className="w-4 h-4" />
                   <span>{siteInfo.phone}</span>
                 </a>
-                <a href="#contact" className="btn-premium w-full block text-center">
+                <MagneticButton href="#contact" variant="primary" className="w-full !justify-center">
                   Randevu Al
-                </a>
+                </MagneticButton>
               </div>
-            </nav>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
