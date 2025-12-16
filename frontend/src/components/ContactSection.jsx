@@ -80,19 +80,24 @@ const ContactSection = () => {
 
       <div className="max-w-7xl mx-auto px-4 relative">
         {/* Section Header */}
-        <div className={`text-center mb-16 transition-all duration-1000 ${
+        <div className={`text-center mb-20 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <span className="inline-block px-4 py-2 bg-teal-100 text-teal-600 rounded-full text-sm font-medium mb-4">
+          <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-teal-100 to-teal-50 text-teal-600 rounded-full text-sm font-medium mb-6 shadow-sm">
+            <Calendar size={16} />
             Bize Ulaşın
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6">
             İLETİŞİM
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Online randevu almak veya sorularınız için bize ulaşın
           </p>
-          <div className="w-24 h-1 bg-gradient-to-r from-teal-400 to-teal-600 mx-auto mt-6 rounded-full" />
+          <div className="flex items-center justify-center gap-2 mt-8">
+            <span className="w-2 h-2 bg-teal-300 rounded-full" />
+            <span className="w-20 h-1 bg-gradient-to-r from-teal-400 to-teal-600 rounded-full" />
+            <span className="w-2 h-2 bg-teal-300 rounded-full" />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
