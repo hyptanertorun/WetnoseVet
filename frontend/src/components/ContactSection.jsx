@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { siteInfo } from '../data/mockData';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle, Sparkles, Calendar } from 'lucide-react';
 
 const ContactSection = () => {
   const sectionRef = useRef(null);
@@ -13,6 +13,7 @@ const ContactSection = () => {
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
