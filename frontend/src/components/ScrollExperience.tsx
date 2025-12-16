@@ -103,7 +103,7 @@ export default function ScrollExperience() {
     <section
       id="scroll-experience"
       ref={containerRef}
-      className="relative min-h-[300vh] bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900"
+      className="relative min-h-[200vh] bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900"
     >
       {/* Pinned Content */}
       <div className="sticky top-0 h-screen overflow-hidden">

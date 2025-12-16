@@ -797,6 +797,9 @@ video {
 .min-h-screen {
   min-height: 100vh;
 }
+.min-h-\[200vh\] {
+  min-height: 200vh;
+}
 .w-0 {
   width: 0px;
 }
