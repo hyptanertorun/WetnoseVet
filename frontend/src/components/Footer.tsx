@@ -14,16 +14,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-medical-blue to-medical-teal flex items-center justify-center">
-                <span className="text-white font-bold text-xl">W</span>
-              </div>
-              <div>
-                <span className="text-2xl font-bold tracking-tight">{siteInfo.name}</span>
-                <span className="block text-xs text-gray-400 tracking-widest uppercase">
-                  {siteInfo.tagline}
-                </span>
-              </div>
+            <div className="mb-6">
+              <img
+                src="https://customer-assets.emergentagent.com/job_vet-revamp/artifacts/hy1fmh1w_logo_anasayfa.png"
+                alt="WETNOSE Veteriner Kliniği"
+                className="h-14 w-auto brightness-0 invert"
+              />
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
               {siteInfo.description}
