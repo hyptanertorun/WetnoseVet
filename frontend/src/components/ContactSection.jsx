@@ -72,10 +72,11 @@ const ContactSection = () => {
     <section 
       id="iletisim" 
       ref={sectionRef}
-      className="py-24 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden"
+      className="py-28 bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden"
     >
       {/* Decorative Elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-teal-500/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl" />
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-teal-500/5 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl animate-morph" />
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-teal-500/5 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl animate-morph" style={{ animationDelay: '4s' }} />
 
       <div className="max-w-7xl mx-auto px-4 relative">
         {/* Section Header */}
