@@ -1,9 +1,7 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useRef, useState } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import {
   FlaskConical,
   Scan,
@@ -13,14 +11,11 @@ import {
   HeartPulse,
   Scissors,
   Sparkles,
+  ArrowRight,
 } from 'lucide-react'
 import { services } from '@/data/siteData'
+import TextReveal from './TextReveal'
 import { cn } from '@/lib/utils'
-
-// Register GSAP plugin
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger)
-}
 
 const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {
   flask: FlaskConical,
@@ -34,184 +29,175 @@ const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = 
 }
 
 export default function ServicesCarousel() {
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
 
-  useEffect(() => {
-    const section = sectionRef.current
-    const scrollContainer = scrollRef.current
-    if (!section || !scrollContainer) return
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end start'],
+  })
 
-    // Calculate scroll distance
-    const scrollWidth = scrollContainer.scrollWidth - window.innerWidth + 100
-
-    // Create horizontal scroll animation
-    gsap.to(scrollContainer, {
-      x: -scrollWidth,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: () => `+=${scrollWidth}`,
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-      },
-    })
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
-  }, [])
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-30%'])
 
   return (
     <section
       id="services"
-      ref={sectionRef}
-      className="relative min-h-screen bg-white overflow-hidden"
+      ref={containerRef}
+      className="relative py-32 bg-gradient-to-b from-[#030712] via-gray-900 to-[#030712] overflow-hidden"
     >
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-teal-50/30" />
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-1/4 left-0 w-96 h-96 bg-medical-blue/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-teal-500/10 rounded-full blur-[120px]" />
+      </div>
 
       {/* Section Header */}
-      <div className="relative pt-24 pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center"
         >
-          <span className="text-medical-blue text-sm font-medium tracking-wider uppercase">
-            Profesyonel Hizmetler
-          </span>
-          <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mt-2">
-            Hizmetlerimiz
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center space-x-2 bg-medical-blue/10 border border-medical-blue/30 rounded-full px-5 py-2.5 mb-8"
+          >
+            <Sparkles className="w-4 h-4 text-medical-blue" />
+            <span className="text-sm font-medium text-medical-blue">Profesyonel Hizmetler</span>
+          </motion.div>
+
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <TextReveal>Hizmetlerimiz</TextReveal>
           </h2>
-          <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
+          
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="text-gray-400 text-lg max-w-2xl mx-auto"
+          >
             Modern teknoloji ve uzman kadromuzla dostlarınıza en iyi bakımı sunuyoruz
-          </p>
+          </motion.p>
         </motion.div>
+      </div>
 
-        {/* Scroll Hint */}
+      {/* Horizontal Scroll Cards */}
+      <div className="relative">
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="flex items-center justify-center mt-8 text-gray-400"
+          style={{ x }}
+          className="flex space-x-6 px-4 sm:px-8 lg:px-16"
         >
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-0.5 bg-medical-blue" />
-            <span className="text-sm">Yatay kaydırın</span>
-            <div className="w-8 h-0.5 bg-medical-blue" />
-          </div>
-        </motion.div>
-      </div>
+          {services.map((service, index) => {
+            const Icon = iconMap[service.icon] || FlaskConical
+            const isHovered = hoveredCard === service.id
 
-      {/* Horizontal Scroll Container */}
-      <div
-        ref={scrollRef}
-        className="relative flex items-center pl-8 lg:pl-16 pb-24 will-change-transform"
-      >
-        {services.map((service, index) => {
-          const Icon = iconMap[service.icon] || FlaskConical
-          const isHovered = hoveredCard === service.id
-
-          return (
-            <motion.div
-              key={service.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              onMouseEnter={() => setHoveredCard(service.id)}
-              onMouseLeave={() => setHoveredCard(null)}
-              className={cn(
-                'service-card flex-shrink-0 w-80 mr-6 p-6 rounded-2xl bg-white',
-                'border border-gray-100 shadow-lg cursor-pointer',
-                isHovered && 'border-medical-blue/30'
-              )}
-            >
-              {/* Card Image */}
-              <div className="relative h-48 rounded-xl overflow-hidden mb-6">
-                <img
-                  src={service.image}
-                  alt={service.name}
-                  className={cn(
-                    'w-full h-full object-cover transition-transform duration-500',
-                    isHovered && 'scale-110'
-                  )}
-                />
-                {/* Overlay */}
-                <div
-                  className={cn(
-                    'absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent transition-opacity duration-300',
-                    isHovered ? 'opacity-70' : 'opacity-50'
-                  )}
-                />
-                {/* Icon */}
-                <div
-                  className={cn(
-                    'absolute bottom-4 right-4 w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300',
-                    isHovered
-                      ? 'bg-medical-blue text-white medical-glow'
-                      : 'glass text-gray-700'
-                  )}
-                >
-                  <Icon className="w-6 h-6" />
-                </div>
-              </div>
-
-              {/* Card Content */}
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                {service.name}
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {service.description}
-              </p>
-
-              {/* Hover Effect - Learn More */}
-              <div
-                className={cn(
-                  'mt-4 flex items-center space-x-2 text-medical-blue font-medium text-sm transition-all duration-300',
-                  isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
-                )}
+            return (
+              <motion.div
+                key={service.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                onMouseEnter={() => setHoveredCard(service.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+                className="flex-shrink-0 w-80 group"
+                data-cursor="pointer"
               >
-                <span>Daha Fazla</span>
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </div>
-
-              {/* HUD Pulse Effect on Hover */}
-              {isHovered && (
                 <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="absolute -inset-1 rounded-2xl border-2 border-medical-blue/30 pointer-events-none"
-                />
-              )}
+                  whileHover={{ y: -10 }}
+                  className={cn(
+                    'relative h-full rounded-2xl overflow-hidden transition-all duration-500',
+                    'bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl',
+                    'border border-white/10',
+                    isHovered && 'border-medical-blue/50 shadow-2xl shadow-medical-blue/20'
+                  )}
+                >
+                  {/* Animated Gradient Border */}
+                  {isHovered && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="absolute inset-0 rounded-2xl"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent, rgba(0,212,255,0.3), transparent)',
+                        backgroundSize: '200% 100%',
+                        animation: 'shine 2s linear infinite',
+                      }}
+                    />
+                  )}
+
+                  {/* Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <motion.img
+                      src={service.image}
+                      alt={service.name}
+                      className="w-full h-full object-cover"
+                      animate={{ scale: isHovered ? 1.1 : 1 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent" />
+                    
+                    {/* Icon Badge */}
+                    <motion.div
+                      animate={{ 
+                        y: isHovered ? -5 : 0,
+                        boxShadow: isHovered ? '0 10px 40px rgba(0,212,255,0.4)' : '0 0 0 rgba(0,212,255,0)'
+                      }}
+                      className="absolute bottom-4 right-4 w-14 h-14 rounded-xl bg-gradient-to-br from-medical-blue to-teal-500 flex items-center justify-center"
+                    >
+                      <Icon className="w-7 h-7 text-white" />
+                    </motion.div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative p-6">
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-medical-blue transition-colors">
+                      {service.name}
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed mb-4">
+                      {service.description}
+                    </p>
+
+                    {/* Learn More */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -10 }}
+                      className="flex items-center space-x-2 text-medical-blue font-medium text-sm"
+                    >
+                      <span>Detaylı Bilgi</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </motion.div>
+                  </div>
+
+                  {/* Glow Effect */}
+                  {isHovered && (
+                    <div className="absolute inset-0 rounded-2xl pointer-events-none">
+                      <div className="absolute inset-0 rounded-2xl opacity-20 blur-xl bg-medical-blue" />
+                    </div>
+                  )}
+                </motion.div>
+              </motion.div>
+            )
+          })}
+        </motion.div>
+
+        {/* Scroll Indicator */}
+        <div className="flex justify-center mt-12">
+          <div className="flex items-center space-x-2 text-gray-500 text-sm">
+            <motion.div
+              animate={{ x: [0, 10, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              <ArrowRight className="w-4 h-4" />
             </motion.div>
-          )
-        })}
-
-        {/* End spacer */}
-        <div className="flex-shrink-0 w-16" />
+            <span>Kaydırarak keşfet</span>
+          </div>
+        </div>
       </div>
-
-      {/* Background Decorations */}
-      <div className="absolute top-1/4 -right-32 w-64 h-64 bg-medical-blue/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 -left-32 w-48 h-48 bg-teal-500/5 rounded-full blur-3xl pointer-events-none" />
     </section>
   )
 }
