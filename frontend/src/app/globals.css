@@ -248,6 +248,45 @@ body {
   position: relative;
 }
 
+/* Gradient Animation */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  animation: gradient 3s ease infinite;
+}
+
+/* Shine Effect */
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shine {
+  animation: shine 2s ease-in-out infinite;
+}
+
+/* Glow Border Animation */
+@keyframes glowBorder {
+  0%, 100% { 
+    box-shadow: 0 0 5px rgba(0, 212, 255, 0.3),
+                0 0 10px rgba(0, 212, 255, 0.2),
+                0 0 15px rgba(0, 212, 255, 0.1);
+  }
+  50% { 
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5),
+                0 0 20px rgba(0, 212, 255, 0.3),
+                0 0 30px rgba(0, 212, 255, 0.2);
+  }
+}
+
+.animate-glow-border {
+  animation: glowBorder 2s ease-in-out infinite;
+}
+
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   *,
