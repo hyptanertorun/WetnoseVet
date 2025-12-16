@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import CustomCursor from '@/components/CustomCursor'
+import ParticleField from '@/components/ParticleField'
 
 export const metadata: Metadata = {
   title: 'WETNOSE | Veteriner Kliniği',
@@ -19,7 +21,9 @@ export default function RootLayout({
       <head>
         <script src="https://assets.emergent.sh/scripts/emergent-main.js" defer></script>
       </head>
-      <body className="antialiased">
+      <body className="antialiased bg-black">
+        <CustomCursor />
+        <ParticleField />
         {children}
         {/* Emergent Badge */}
         <a
