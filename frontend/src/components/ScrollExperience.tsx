@@ -31,38 +31,9 @@ export default function ScrollExperience() {
       return
     }
 
-    const container = containerRef.current
-    if (!container) return
-
-    // Create GSAP ScrollTrigger timeline
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: container,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        onUpdate: (self) => {
-          const progress = self.progress
-          setScrollProgress(progress)
-          
-          // Update current step based on progress
-          if (progress < 0.25) setCurrentStep(0)
-          else if (progress < 0.5) setCurrentStep(1)
-          else if (progress < 0.75) setCurrentStep(2)
-          else setCurrentStep(3)
-
-          // Show organ overlay after step 2
-          setShowOrganOverlay(progress > 0.5)
-        },
-      },
-    })
-
-    // Cat animation timeline
+    // Simple breathing animation for cat
     const cat = catRef.current
     if (cat) {
-      // Breathing animation
       gsap.to(cat, {
         scale: 1.02,
         duration: 2,
@@ -70,33 +41,11 @@ export default function ScrollExperience() {
         yoyo: true,
         ease: 'sine.inOut',
       })
-
-      // Scroll-based animations
-      tl.to(cat, {
-        y: -20,
-        rotateY: 10,
-        duration: 0.25,
-      }, 0)
-      .to(cat, {
-        x: 30,
-        rotateY: 0,
-        duration: 0.25,
-      }, 0.25)
-      .to(cat, {
-        scale: 1.1,
-        duration: 0.25,
-      }, 0.5)
-      .to(cat, {
-        y: 0,
-        x: 0,
-        scale: 1,
-        duration: 0.25,
-      }, 0.75)
     }
 
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
+    // Show organ overlay by default
+    setShowOrganOverlay(true)
+    setCurrentStep(3) // Show all steps as complete
   }, [])
 
   return (
