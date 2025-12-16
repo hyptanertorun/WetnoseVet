@@ -35,30 +35,15 @@ export default function Header() {
             href="#hero"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex items-center space-x-3 group"
+            className="flex items-center group"
             data-cursor="pointer"
           >
-            <div className="relative">
-              <motion.div 
-                className="w-11 h-11 rounded-xl bg-gradient-to-br from-medical-blue to-teal-500 flex items-center justify-center"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-              >
-                <span className="text-white font-bold text-xl">W</span>
-              </motion.div>
-              <motion.div
-                animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute inset-0 rounded-xl bg-medical-blue/30"
-              />
-            </div>
-            <div>
-              <span className="text-xl font-bold tracking-tight text-white">
-                {siteInfo.name}
-              </span>
-              <span className="block text-[10px] text-gray-400 tracking-widest uppercase">
-                {siteInfo.tagline}
-              </span>
-            </div>
+            <motion.img
+              src="https://customer-assets.emergentagent.com/job_vet-revamp/artifacts/hy1fmh1w_logo_anasayfa.png"
+              alt="WETNOSE Veteriner Kliniği"
+              className="h-12 w-auto brightness-0 invert"
+              whileHover={{ scale: 1.05 }}
+            />
           </motion.a>
 
           {/* Desktop Navigation */}
