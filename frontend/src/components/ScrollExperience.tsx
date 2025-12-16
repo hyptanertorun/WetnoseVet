@@ -103,10 +103,10 @@ export default function ScrollExperience() {
     <section
       id="scroll-experience"
       ref={containerRef}
-      className="relative min-h-[200vh] bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900"
+      className="relative bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900"
     >
-      {/* Pinned Content */}
-      <div className="sticky top-0 h-screen overflow-hidden">
+      {/* Single screen content - no pinning needed */}
+      <div className="min-h-screen py-24 overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-800 via-gray-900 to-black" />
