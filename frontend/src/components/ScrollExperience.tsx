@@ -287,13 +287,6 @@ export default function ScrollExperience() {
           </div>
         </div>
 
-        {/* Scroll Progress Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <div className="flex flex-col items-center space-y-2">
-            <div className="w-px h-16 bg-gradient-to-b from-transparent via-medical-blue to-transparent" />
-            <span className="text-xs text-gray-500">Kaydırmaya devam edin</span>
-          </div>
-        </div>
       </div>
     </section>
   )
