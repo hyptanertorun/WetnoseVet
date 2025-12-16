@@ -30,21 +30,21 @@ export const navLinks = [
 export const heroSlides = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1920&q=80",
-    title: "DOSTLARIMIZA ÇOK FAZLA DEĞER VERİYORUZ",
-    subtitle: "7/24 Acil Veteriner Hizmeti"
+    image: "https://customer-assets.emergentagent.com/job_furry-makeover-2/artifacts/q46ryzct_wetnoseslider1.png",
+    title: "Dostlarınıza Özel Bakım",
+    subtitle: "Modern teknoloji ile sağlık takibi"
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=1920&q=80",
-    title: "MİNİK DOSTLARINIZ GÜVENLİ ELLERDE",
-    subtitle: "Uzman Veteriner Hekim Kadromuz"
+    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=1920&q=80",
+    title: "Uzman Veteriner Ekibi",
+    subtitle: "7/24 Acil Veteriner Hizmeti"
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1920&q=80",
-    title: "SAĞLIKLI VE MUTLU DOSTLAR",
-    subtitle: "Modern Klinik Hizmetlerimiz"
+    image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=1920&q=80",
+    title: "Minik Dostlarınız Güvende",
+    subtitle: "Profesyonel sağlık hizmetleri"
   }
 ];
 
