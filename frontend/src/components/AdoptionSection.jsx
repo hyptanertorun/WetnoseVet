@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { adoptionPets, siteInfo } from '../data/mockData';
-import { Heart, Info, PawPrint, Sparkles, ArrowRight } from 'lucide-react';
+import { Heart, ArrowRight, Sparkles } from 'lucide-react';
 
 const AdoptionSection = () => {
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [likedPets, setLikedPets] = useState([]);
+  const [hoveredPet, setHoveredPet] = useState(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -32,141 +33,128 @@ const AdoptionSection = () => {
     );
   };
 
-  // Floating Paw Component
-  const FloatingPaw = ({ className, delay, size = 60, rotation = 0 }) => (
-    <div 
-      className={`absolute pointer-events-none ${className}`}
-      style={{ transform: `rotate(${rotation}deg)` }}
-    >
-      <svg 
-        viewBox="0 0 60 60" 
-        style={{ width: size, height: size, animationDelay: delay }}
-        className="opacity-10 animate-float text-white"
-      >
-        <circle cx="20" cy="15" r="8" fill="currentColor"/>
-        <circle cx="40" cy="15" r="8" fill="currentColor"/>
-        <circle cx="12" cy="28" r="6" fill="currentColor"/>
-        <circle cx="48" cy="28" r="6" fill="currentColor"/>
-        <path d="M15 35 Q20 55 30 45 Q40 55 45 35 Q40 50 30 40 Q20 50 15 35" fill="currentColor"/>
-      </svg>
-    </div>
-  );
-
   return (
     <section 
       id="sahiplendirme" 
       ref={sectionRef}
-      className="py-28 relative overflow-hidden"
+      className="relative min-h-screen overflow-hidden"
     >
-      {/* Animated Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700 animate-gradient" style={{ backgroundSize: '200% 200%' }} />
-      
-      {/* Animated Wave Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <svg className="absolute bottom-0 w-[200%] animate-wave" viewBox="0 0 1440 320" preserveAspectRatio="none">
-          <path fill="white" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" />
-        </svg>
+      {/* Split Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full lg:w-1/2 h-full bg-gradient-to-br from-teal-500 via-teal-600 to-teal-700" />
+        <div className="absolute top-0 right-0 w-full lg:w-1/2 h-full bg-white hidden lg:block" />
       </div>
 
-      {/* Floating Paws */}
-      <FloatingPaw className="top-[10%] left-[5%]" delay="0s" size={70} rotation={-15} />
-      <FloatingPaw className="top-[30%] right-[8%]" delay="1s" size={90} rotation={20} />
-      <FloatingPaw className="bottom-[25%] left-[15%]" delay="2s" size={50} rotation={-30} />
-      <FloatingPaw className="bottom-[40%] right-[20%]" delay="0.5s" size={60} rotation={45} />
-      <FloatingPaw className="top-[60%] left-[40%]" delay="1.5s" size={40} rotation={10} />
+      {/* Decorative Elements */}
+      <div className="absolute top-20 left-20 w-64 h-64 border border-white/20 rounded-full" />
+      <div className="absolute bottom-20 left-40 w-32 h-32 border border-white/10 rounded-full" />
 
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        {/* Section Header */}
-        <div className={`text-center mb-20 transition-all duration-1000 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}>
-          <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 backdrop-blur-md text-white rounded-full text-sm font-medium mb-6">
-            <PawPrint size={16} />
-            Yuva Arıyorlar
-          </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
-            SAHİPLENDİRME
-          </h2>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
-            {siteInfo.description}
-          </p>
-          <div className="flex items-center justify-center gap-2 mt-8">
-            <span className="w-2 h-2 bg-white/50 rounded-full" />
-            <span className="w-20 h-1 bg-white/50 rounded-full" />
-            <span className="w-2 h-2 bg-white/50 rounded-full" />
-          </div>
-        </div>
+      <div className="relative min-h-screen flex items-center">
+        <div className="w-full max-w-7xl mx-auto px-8 py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Left Content */}
+            <div className={`text-white transition-all duration-1000 ${
+              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
+            }`}>
+              <div className="flex items-center gap-4 mb-6">
+                <Sparkles size={20} className="text-teal-200" />
+                <span className="text-teal-200 text-sm tracking-[0.3em] uppercase font-medium">Sahiplendirme</span>
+              </div>
 
-        {/* Pets Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {adoptionPets.map((pet, index) => {
-            const isLiked = likedPets.includes(pet.id);
-            
-            return (
-              <div
-                key={pet.id}
-                className={`group transition-all duration-700 ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'
-                }`}
-                style={{ transitionDelay: `${index * 150}ms` }}
-              >
-                <div className="relative bg-white rounded-[2rem] overflow-hidden shadow-2xl hover:-translate-y-4 transition-all duration-500">
-                  {/* Image */}
-                  <div className="relative h-72 overflow-hidden">
-                    <img
-                      src={pet.image}
-                      alt={pet.name}
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                    
-                    {/* Heart Button */}
-                    <button 
-                      onClick={() => toggleLike(pet.id)}
-                      className={`absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 shadow-lg ${
-                        isLiked 
-                          ? 'bg-red-500 text-white scale-110' 
-                          : 'bg-white/90 text-gray-400 hover:text-red-500'
-                      }`}
-                    >
-                      <Heart size={22} className={isLiked ? 'fill-current animate-pulse' : ''} />
-                    </button>
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black leading-none mb-8">
+                BİR DOST
+                <br />
+                <span className="text-teal-200">EDİNİN</span>
+              </h2>
 
-                    {/* Type Badge */}
-                    <div className="absolute bottom-4 left-4 px-4 py-2 bg-teal-500 text-white text-sm font-semibold rounded-full shadow-lg">
-                      {pet.type}
-                    </div>
+              <p className="text-xl text-white/80 leading-relaxed mb-12 max-w-lg">
+                {siteInfo.description} Her biri sevgi dolu bir yuvayı bekliyor.
+              </p>
 
-                    {/* Name on Image */}
-                    <div className="absolute bottom-4 right-4 text-right">
-                      <h3 className="text-2xl font-bold text-white drop-shadow-lg">{pet.name}</h3>
-                      <span className="text-white/80 text-sm">{pet.age}</span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <p className="text-gray-600 mb-6">{pet.description}</p>
-                    <button className="w-full py-4 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-xl font-semibold hover:from-teal-600 hover:to-teal-700 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-teal-500/30 group/btn">
-                      <Info size={18} />
-                      <span>Detaylı Bilgi</span>
-                      <ArrowRight size={18} className="opacity-0 -translate-x-2 group-hover/btn:opacity-100 group-hover/btn:translate-x-0 transition-all" />
-                    </button>
-                  </div>
+              {/* Stats */}
+              <div className="flex gap-12 mb-12">
+                <div>
+                  <div className="text-5xl font-black text-white">50+</div>
+                  <div className="text-teal-200 text-sm uppercase tracking-wider">Bekleyen Dost</div>
+                </div>
+                <div>
+                  <div className="text-5xl font-black text-white">200+</div>
+                  <div className="text-teal-200 text-sm uppercase tracking-wider">Mutlu Yuva</div>
                 </div>
               </div>
-            );
-          })}
-        </div>
 
-        {/* CTA */}
-        <div className={`text-center mt-16 transition-all duration-1000 delay-500 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}>
-          <button className="group px-10 py-5 bg-white text-teal-600 rounded-full font-semibold text-lg hover:bg-gray-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-1 inline-flex items-center gap-3">
-            Tümünü Görüntüle
-            <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform" />
-          </button>
+              <button className="group px-10 py-5 bg-white text-teal-600 rounded-full font-semibold text-lg hover:bg-gray-100 transition-all duration-300 flex items-center gap-3">
+                Tümünü Gör
+                <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+              </button>
+            </div>
+
+            {/* Right - Pet Cards */}
+            <div className={`relative transition-all duration-1000 delay-300 ${
+              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'
+            }`}>
+              {/* Stacked Cards */}
+              <div className="relative h-[600px]">
+                {adoptionPets.map((pet, index) => {
+                  const isLiked = likedPets.includes(pet.id);
+                  const isHovered = hoveredPet === pet.id;
+                  
+                  return (
+                    <div
+                      key={pet.id}
+                      data-cursor="Sahiplen"
+                      className="absolute w-full max-w-sm transition-all duration-500 cursor-pointer"
+                      style={{
+                        top: `${index * 30}px`,
+                        left: `${index * 30}px`,
+                        zIndex: isHovered ? 10 : adoptionPets.length - index,
+                        transform: isHovered ? 'scale(1.05) rotate(0deg)' : `rotate(${(index - 1) * 3}deg)`
+                      }}
+                      onMouseEnter={() => setHoveredPet(pet.id)}
+                      onMouseLeave={() => setHoveredPet(null)}
+                    >
+                      <div className="bg-white rounded-3xl overflow-hidden shadow-2xl">
+                        {/* Image */}
+                        <div className="relative h-64 overflow-hidden">
+                          <img
+                            src={pet.image}
+                            alt={pet.name}
+                            className="w-full h-full object-cover transition-transform duration-500"
+                            style={{ transform: isHovered ? 'scale(1.1)' : 'scale(1)' }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                          
+                          {/* Like Button */}
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); toggleLike(pet.id); }}
+                            className={`absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg ${
+                              isLiked ? 'bg-red-500 text-white' : 'bg-white text-gray-400 hover:text-red-500'
+                            }`}
+                          >
+                            <Heart size={22} className={isLiked ? 'fill-current' : ''} />
+                          </button>
+
+                          {/* Type Badge */}
+                          <div className="absolute bottom-4 left-4 px-4 py-1.5 bg-teal-500 text-white text-sm font-medium rounded-full">
+                            {pet.type}
+                          </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6">
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="text-2xl font-bold text-gray-900">{pet.name}</h3>
+                            <span className="text-gray-500 text-sm">{pet.age}</span>
+                          </div>
+                          <p className="text-gray-600">{pet.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
