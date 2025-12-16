@@ -176,7 +176,7 @@ export default function HeroSlider() {
                 'w-2 h-2 rounded-full transition-all duration-300',
                 index === currentSlide
                   ? 'w-8 bg-medical-blue'
-                  : 'bg-gray-300 hover:bg-gray-400'
+                  : 'bg-white/50 hover:bg-white/80'
               )}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -185,16 +185,12 @@ export default function HeroSlider() {
 
         <button
           onClick={nextSlide}
-          className="p-2 rounded-full glass hover:bg-white/90 transition-colors"
+          className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/40 transition-colors"
           aria-label="Next slide"
         >
-          <ChevronRight className="w-5 h-5 text-gray-700" />
+          <ChevronRight className="w-5 h-5 text-white" />
         </button>
       </div>
-
-      {/* Subtle Glow Animation */}
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-medical-blue/10 rounded-full blur-3xl animate-pulse pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/3 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl animate-pulse pointer-events-none" style={{ animationDelay: '1s' }} />
     </section>
   )
 }
