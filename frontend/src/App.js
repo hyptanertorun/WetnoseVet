@@ -1,6 +1,5 @@
 import React from "react";
 import "./App.css";
-import CustomCursor from "./components/CustomCursor";
 import Header from "./components/Header";
 import HeroSection from "./components/HeroSection";
 import ServicesSection from "./components/ServicesSection";
@@ -14,8 +13,7 @@ import Footer from "./components/Footer";
 
 function App() {
   return (
-    <div className="App cursor-none lg:cursor-none">
-      <CustomCursor />
+    <div className="App">
       <Header />
       <main>
         <HeroSection />
