@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { team } from '../data/mockData';
-import { Mail, Phone, Linkedin, Award, Star, Sparkles } from 'lucide-react';
+import { Mail, Phone, Linkedin, Instagram, Award } from 'lucide-react';
 
 const TeamSection = () => {
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [hoveredMember, setHoveredMember] = useState(null);
+  const [activeCard, setActiveCard] = useState(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -14,7 +15,7 @@ const TeamSection = () => {
           setIsVisible(true);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.2 }
     );
 
     if (sectionRef.current) {
@@ -24,108 +25,127 @@ const TeamSection = () => {
     return () => observer.disconnect();
   }, []);
 
+  const handleMouseMove = (e, cardId) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    setMousePos({ x, y });
+    setActiveCard(cardId);
+  };
+
   return (
     <section 
       id="ekip" 
       ref={sectionRef}
-      className="py-28 bg-white relative overflow-hidden"
+      className="relative min-h-screen bg-white overflow-hidden py-32"
     >
-      {/* Decorative Elements */}
-      <div className="absolute top-20 left-10 w-40 h-40 border-4 border-teal-100 rounded-full opacity-50 animate-rotate" style={{ animationDuration: '30s' }} />
-      <div className="absolute bottom-20 right-10 w-32 h-32 bg-gradient-to-br from-teal-50 to-transparent rounded-2xl rotate-12 animate-float" />
-      <div className="absolute top-1/2 left-1/4 w-3 h-3 bg-teal-400 rounded-full animate-float opacity-40" style={{ animationDelay: '1s' }} />
+      {/* Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-gray-50 to-transparent" />
+        <div className="absolute bottom-0 right-0 w-1/2 h-full bg-gradient-to-l from-teal-50/50 to-transparent" />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 relative">
-        {/* Section Header */}
-        <div className={`text-center mb-20 transition-all duration-1000 ${
+      {/* Decorative Circle */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-gray-200 rounded-full opacity-50" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-gray-200 rounded-full opacity-30" />
+
+      <div className="relative max-w-7xl mx-auto px-8">
+        {/* Header */}
+        <div className={`text-center mb-24 transition-all duration-1000 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-teal-100 to-teal-50 text-teal-600 rounded-full text-sm font-medium mb-6 shadow-sm">
-            <Award size={16} />
-            Uzman Kadro
-          </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6">
-            EKİBİMİZ
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Deneyimli veteriner hekimlerimiz ile dostlarınız güvende
-          </p>
-          <div className="flex items-center justify-center gap-2 mt-8">
-            <span className="w-2 h-2 bg-teal-300 rounded-full" />
-            <span className="w-20 h-1 bg-gradient-to-r from-teal-400 to-teal-600 rounded-full" />
-            <span className="w-2 h-2 bg-teal-300 rounded-full" />
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="h-px w-20 bg-teal-500" />
+            <span className="text-teal-600 text-sm tracking-[0.3em] uppercase font-medium">Ekibimiz</span>
+            <div className="h-px w-20 bg-teal-500" />
           </div>
+          
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 leading-none mb-6">
+            UZMAN
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-teal-600"> KADRO</span>
+          </h2>
+          
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Deneyimli veteriner hekimlerimiz ile dostlarınız emin ellerde
+          </p>
         </div>
 
-        {/* Team Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+        {/* Team Cards - Split Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           {team.map((member, index) => (
             <div
               key={member.id}
-              className={`group transition-all duration-700 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'
+              className={`group relative transition-all duration-1000 ${
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
               }`}
               style={{ transitionDelay: `${index * 200}ms` }}
-              onMouseEnter={() => setHoveredMember(member.id)}
-              onMouseLeave={() => setHoveredMember(null)}
+              onMouseMove={(e) => handleMouseMove(e, member.id)}
+              onMouseLeave={() => setActiveCard(null)}
             >
-              <div className="relative bg-gradient-to-br from-gray-50 via-white to-gray-50 rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3">
-                {/* Background Decoration */}
-                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-teal-500/10 to-transparent rounded-full -translate-y-20 translate-x-20" />
-                
-                <div className="flex flex-col md:flex-row">
-                  {/* Image Container */}
-                  <div className="relative w-full md:w-2/5 h-72 md:h-auto overflow-hidden">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-white via-transparent to-transparent" />
-                    
-                    {/* Rating Stars */}
-                    <div className="absolute top-4 left-4 flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star 
-                          key={i} 
-                          size={14} 
-                          className="fill-yellow-400 text-yellow-400 drop-shadow-sm"
-                          style={{ animationDelay: `${i * 100}ms` }}
-                        />
-                      ))}
+              <div 
+                className="relative h-[600px] rounded-[3rem] overflow-hidden"
+                style={{
+                  transform: activeCard === member.id 
+                    ? `perspective(1000px) rotateY(${(mousePos.x - 0.5) * 10}deg) rotateX(${(mousePos.y - 0.5) * -10}deg)`
+                    : 'none',
+                  transition: activeCard === member.id ? 'none' : 'transform 0.5s ease-out'
+                }}
+              >
+                {/* Image */}
+                <div className="absolute inset-0">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                </div>
+
+                {/* Spotlight Effect */}
+                {activeCard === member.id && (
+                  <div 
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background: `radial-gradient(circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(20, 184, 166, 0.3) 0%, transparent 50%)`
+                    }}
+                  />
+                )}
+
+                {/* Content */}
+                <div className="absolute inset-0 flex flex-col justify-end p-10">
+                  {/* Badge */}
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-teal-300 text-sm font-medium flex items-center gap-2">
+                      <Award size={16} />
+                      {member.title}
                     </div>
                   </div>
 
-                  {/* Content */}
-                  <div className="flex-1 p-8 flex flex-col justify-center">
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-teal-100 text-teal-600 rounded-full text-xs font-semibold mb-4 w-fit">
-                      <Sparkles size={12} />
-                      {member.title}
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
-                      {member.name}
-                    </h3>
-                    <p className="text-teal-600 font-medium mb-6">
-                      {member.specialization}
-                    </p>
+                  <h3 className="text-4xl font-black text-white mb-2">
+                    {member.name}
+                  </h3>
+                  <p className="text-teal-400 text-lg font-medium mb-8">
+                    {member.specialization}
+                  </p>
 
-                    {/* Social/Contact Icons */}
-                    <div className="flex gap-3">
-                      {[Phone, Mail, Linkedin].map((Icon, i) => (
-                        <button 
-                          key={i}
-                          className="w-11 h-11 bg-gray-100 rounded-xl flex items-center justify-center text-gray-500 hover:bg-teal-500 hover:text-white transition-all duration-300 hover:scale-110 hover:-translate-y-1 shadow-sm hover:shadow-lg"
-                          style={{ transitionDelay: `${i * 50}ms` }}
-                        >
-                          <Icon size={18} />
-                        </button>
-                      ))}
-                    </div>
+                  {/* Social Links */}
+                  <div className="flex gap-4 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                    {[Phone, Mail, Linkedin, Instagram].map((Icon, i) => (
+                      <button 
+                        key={i}
+                        className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-teal-500 transition-colors"
+                      >
+                        <Icon size={20} />
+                      </button>
+                    ))}
                   </div>
                 </div>
 
-                {/* Bottom Accent */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center" />
+                {/* Index Number */}
+                <span className="absolute top-10 right-10 text-[150px] font-black text-white/5 leading-none">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
               </div>
             </div>
           ))}
