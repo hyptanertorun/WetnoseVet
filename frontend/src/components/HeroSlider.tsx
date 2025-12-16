@@ -42,34 +42,43 @@ export default function HeroSlider() {
   }
 
   return (
-    <section id="hero" className="relative h-screen w-full overflow-hidden">
-      {/* Background Slides */}
-      <AnimatePresence initial={false} custom={direction}>
-        <motion.div
-          key={currentSlide}
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            x: { type: 'spring', stiffness: 300, damping: 30 },
-            opacity: { duration: 0.4 },
-          }}
+    <section id="hero" className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-gray-50 via-white to-teal-50/30">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-30">
+        <div 
           className="absolute inset-0"
-        >
-          {/* Image with Parallax Effect */}
-          <div
-            className="absolute inset-0 bg-cover bg-center transform scale-110"
-            style={{
-              backgroundImage: `url(${heroSlides[currentSlide].image})`,
+          style={{
+            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                             radial-gradient(circle at 75% 75%, rgba(20, 184, 166, 0.1) 0%, transparent 50%)`,
+          }}
+        />
+      </div>
+
+      {/* Centered Image Container */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.div
+            key={currentSlide}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: 'spring', stiffness: 300, damping: 30 },
+              opacity: { duration: 0.4 },
             }}
-          />
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/70 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white/50 to-transparent" />
-        </motion.div>
-      </AnimatePresence>
+            className="absolute right-0 lg:right-[10%] top-1/2 -translate-y-1/2 w-[50%] lg:w-[45%] max-w-2xl"
+          >
+            {/* Centered smaller image */}
+            <img
+              src={heroSlides[currentSlide].image}
+              alt={heroSlides[currentSlide].title}
+              className="w-full h-auto object-contain rounded-2xl shadow-2xl"
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
       {/* Content Overlay - Left 35-40% Safe Zone */}
       <div className="absolute inset-0 flex items-center">
