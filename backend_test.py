@@ -116,6 +116,7 @@ class WetnoseAPITester:
             "name": "Test User",
             "email": "test@example.com",
             "phone": "555-1234",
+            "subject": "Test Subject",
             "message": "Test message from API test"
         }
         
