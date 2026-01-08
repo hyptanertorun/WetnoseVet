@@ -1,0 +1,21 @@
+User-Agent: *
+Allow: /
+Allow: /hizmetler
+Allow: /hizmetler/*
+Allow: /ekibimiz
+Allow: /ekibimiz/*
+Allow: /hakkimizda
+Allow: /randevu
+Allow: /galeri
+Allow: /iletisim
+Allow: /saglik-rehberi
+Allow: /saglik-rehberi/*
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/admin
+Disallow: /api/admin/*
+Disallow: /geri-bildirim
+Disallow: /preview
+Disallow: /preview/*
+
+Sitemap: https://www.wetnose.com.tr/sitemap.xml

@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST='{"app/page.tsx -> @/components/Testimonials":{"id":66089,"files":["static/chunks/6089.0076343f4c4eff6a.js"]}}';

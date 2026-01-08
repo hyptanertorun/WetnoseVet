@@ -1,0 +1,18 @@
+[
+  {
+    "content": "Explore backend folder structure to identify all GET routes",
+    "status": "completed"
+  },
+  {
+    "content": "Create performance test script for testing GET routes only",
+    "status": "completed"
+  },
+  {
+    "content": "Run performance tests against all three backend providers",
+    "status": "completed"
+  },
+  {
+    "content": "Submit results using Performance_result function",
+    "status": "completed"
+  }
+]

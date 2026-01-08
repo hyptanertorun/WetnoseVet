@@ -1,0 +1,105 @@
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+// Paths that should always bypass maintenance mode
+const BYPASS_PATHS = [
+  '/bakim',           // Maintenance page itself
+  '/admin',           // Admin panel
+  '/api',             // API routes
+  '/_next',           // Next.js internals
+  '/favicon.ico',
+  '/robots.txt',
+  '/sitemap.xml',
+  '/uploads',         // Uploaded files
+]
+
+// Preview secret key for admin bypass
+const PREVIEW_KEY = 'admin'
+
+// Check if path should bypass maintenance
+function shouldBypass(pathname: string): boolean {
+  return BYPASS_PATHS.some(path => pathname.startsWith(path))
+}
+
+export async function middleware(request: NextRequest) {
+  const { pathname, searchParams } = request.nextUrl
+
+  // Skip maintenance check for bypass paths
+  if (shouldBypass(pathname)) {
+    return NextResponse.next()
+  }
+
+  // Skip for static files
+  if (pathname.includes('.') && !pathname.endsWith('/')) {
+    return NextResponse.next()
+  }
+
+  // Check for preview mode query parameter (?preview=admin)
+  const previewParam = searchParams.get('preview')
+  if (previewParam === PREVIEW_KEY) {
+    // Set a cookie to remember preview mode for this session
+    const response = NextResponse.next()
+    response.cookies.set('maintenance_preview', 'true', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24, // 24 hours
+    })
+    return response
+  }
+
+  // Check if user has preview cookie
+  const previewCookie = request.cookies.get('maintenance_preview')?.value
+  if (previewCookie === 'true') {
+    return NextResponse.next()
+  }
+
+  try {
+    // Check maintenance status from backend
+    // Use internal URL in server context, public URL in client
+    const backendUrl = process.env.INTERNAL_BACKEND_URL || process.env.NEXT_PUBLIC_BACKEND_URL || ''
+    
+    // Skip if no backend URL configured
+    if (!backendUrl) {
+      return NextResponse.next()
+    }
+    
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 3000) // 3 second timeout
+    
+    const response = await fetch(`${backendUrl}/api/public/maintenance-status`, {
+      signal: controller.signal,
+      cache: 'no-store',
+    })
+    
+    clearTimeout(timeoutId)
+
+    if (response.ok) {
+      const data = await response.json()
+      
+      if (data.maintenance_mode) {
+        // Redirect to maintenance page
+        const url = request.nextUrl.clone()
+        url.pathname = '/bakim'
+        return NextResponse.redirect(url)
+      }
+    }
+  } catch (error) {
+    // If backend is down or timeout, don't block the site - let it pass
+    // This prevents deployment failures when backend isn't ready yet
+  }
+
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+}

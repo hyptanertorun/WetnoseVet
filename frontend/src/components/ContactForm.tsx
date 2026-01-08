@@ -1,275 +1,321 @@
 'use client'
 
-import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Phone, Mail, MapPin, Send, MessageCircle, Clock } from 'lucide-react'
+import { Phone, Mail, MapPin, Clock, Navigation, MessageCircle, Calendar, Sparkles, ArrowRight } from 'lucide-react'
 import { siteInfo } from '@/data/siteData'
-import { cn } from '@/lib/utils'
+import Link from 'next/link'
 
 export default function ContactForm() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    petName: '',
-    message: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    
-    setIsSubmitting(false)
-    setSubmitted(true)
-    
-    // Reset form
-    setTimeout(() => {
-      setSubmitted(false)
-      setFormData({ name: '', email: '', phone: '', petName: '', message: '' })
-    }, 3000)
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }))
-  }
+  const contactCards = [
+    {
+      icon: Phone,
+      label: 'Telefon',
+      value: siteInfo.phone,
+      subValue: siteInfo.phone2,
+      href: `tel:${siteInfo.phone.replace(/\s/g, '')}`,
+    },
+    {
+      icon: Mail,
+      label: 'E-posta',
+      value: siteInfo.email,
+      href: `mailto:${siteInfo.email}`,
+    },
+    {
+      icon: Clock,
+      label: 'Çalışma Saatleri',
+      value: '7/24 Açık',
+      subValue: 'Acil hizmet her zaman',
+    },
+  ]
 
   return (
-    <section id="contact" className="py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="relative min-h-screen overflow-hidden">
+      {/* Full Width Map Background */}
+      <div className="absolute inset-0">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3046.5!2d29.9419!3d40.7656!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cb4f9a6a0e2c4d%3A0x8b1a2b3c4d5e6f7a!2sWetnose%20Veteriner%20Klini%C4%9Fi!5e0!3m2!1str!2str!4v1702800000000!5m2!1str!2str"
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className="grayscale opacity-40"
+        />
+        {/* Dark Overlay with Grid */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/95 via-[#030712]/85 to-[#030712]/95" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      </div>
+
+      {/* Content */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-28">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
-          <span className="text-medical-blue text-sm font-medium tracking-wider uppercase">
-            Bize Ulaşın
-          </span>
-          <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mt-2">
-            İletişim
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center space-x-2 bg-teal-500/20 backdrop-blur-sm border border-teal-400/35 rounded-full px-5 py-2.5 mb-6 shadow-lg shadow-teal-500/10"
+          >
+            <MapPin className="w-4 h-4 text-teal-400" />
+            <span className="text-sm font-semibold text-teal-300">Bize Ulaşın</span>
+          </motion.div>
+          <h2 className="text-3xl lg:text-5xl font-bold text-white mt-2">
+            İletişime
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-teal-300"> Geçin</span>
           </h2>
-          <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
-            Sorularınız için bize ulaşın veya doğrudan randevu alın
+          <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
+            Sorularınız için bize ulaşın veya doğrudan online randevu alın
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Info */}
+        {/* Floating Contact Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+          {contactCards.map((card, index) => (
+            <motion.a
+              key={card.label}
+              href={card.href}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="group relative bg-teal-500/10 backdrop-blur-xl border border-teal-400/20 rounded-2xl p-6 hover:border-teal-400/50 hover:bg-teal-500/15 hover:shadow-[0_0_40px_rgba(20,184,166,0.15)] transition-all duration-500"
+            >
+              {/* Glow Effect */}
+              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-xl bg-teal-500" />
+
+              <div className="relative flex items-start space-x-4">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-teal-500/25 backdrop-blur-xl border border-teal-400/30 shadow-lg group-hover:shadow-[0_0_25px_rgba(20,184,166,0.4)] transition-shadow duration-500">
+                  <card.icon className="w-6 h-6 text-teal-300" />
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">{card.label}</p>
+                  <p className="text-white font-semibold text-lg group-hover:text-teal-400 transition-colors">
+                    {card.value}
+                  </p>
+                  {card.subValue && (
+                    <p className="text-gray-500 text-sm mt-1">{card.subValue}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Arrow */}
+              <motion.div
+                className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                <Navigation className="w-5 h-5 text-teal-400" />
+              </motion.div>
+            </motion.a>
+          ))}
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left - Address & Map Preview */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="space-y-8"
+            className="space-y-6"
           >
-            {/* Contact Cards */}
-            <div className="space-y-4">
-              <div className="flex items-start space-x-4 p-4 bg-white rounded-xl shadow-sm">
-                <div className="w-12 h-12 rounded-xl bg-medical-blue/10 flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-6 h-6 text-medical-blue" />
+            {/* Address Card */}
+            <div className="bg-teal-500/10 backdrop-blur-xl border border-teal-400/20 rounded-2xl p-6 hover:border-teal-400/40 transition-all duration-500">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 rounded-xl bg-teal-500/25 backdrop-blur-xl border border-teal-400/30 flex items-center justify-center flex-shrink-0 shadow-lg shadow-teal-500/25">
+                  <MapPin className="w-6 h-6 text-teal-300" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">Telefon</h4>
-                  <a href={`tel:${siteInfo.phone.replace(/\s/g, '')}`} className="text-gray-600 hover:text-medical-blue transition-colors">
-                    {siteInfo.phone}
-                  </a>
-                  <br />
-                  <a href={`tel:${siteInfo.phone2.replace(/\s/g, '')}`} className="text-gray-600 hover:text-medical-blue transition-colors">
-                    {siteInfo.phone2}
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4 p-4 bg-white rounded-xl shadow-sm">
-                <div className="w-12 h-12 rounded-xl bg-medical-blue/10 flex items-center justify-center flex-shrink-0">
-                  <Mail className="w-6 h-6 text-medical-blue" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">E-posta</h4>
-                  <a href={`mailto:${siteInfo.email}`} className="text-gray-600 hover:text-medical-blue transition-colors">
-                    {siteInfo.email}
-                  </a>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4 p-4 bg-white rounded-xl shadow-sm">
-                <div className="w-12 h-12 rounded-xl bg-medical-blue/10 flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-medical-blue" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Adres</h4>
-                  <p className="text-gray-600">{siteInfo.address}</p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4 p-4 bg-white rounded-xl shadow-sm">
-                <div className="w-12 h-12 rounded-xl bg-medical-blue/10 flex items-center justify-center flex-shrink-0">
-                  <Clock className="w-6 h-6 text-medical-blue" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Çalışma Saatleri</h4>
-                  <p className="text-gray-600">Pazartesi - Pazar: 7/24</p>
-                  <p className="text-sm text-medical-blue">Acil Hizmet Her Zaman</p>
+                  <h4 className="text-white font-semibold text-lg mb-2">Adresimiz</h4>
+                  <p className="text-gray-400 leading-relaxed">{siteInfo.address}</p>
                 </div>
               </div>
             </div>
 
-            {/* WhatsApp CTA */}
-            <a
-              href={`https://wa.me/${siteInfo.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center space-x-3 w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-xl font-medium transition-colors"
-            >
-              <MessageCircle className="w-5 h-5" />
-              <span>WhatsApp ile Hızlı İletişim</span>
-            </a>
-
-            {/* Map Placeholder */}
-            <div className="relative h-64 rounded-2xl overflow-hidden bg-gray-200">
+            {/* Map Preview with Animated Pin */}
+            <div className="relative h-72 rounded-2xl overflow-hidden border border-teal-400/20 group hover:border-teal-400/40 transition-all duration-500">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1!2d29.92!3d40.76!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDQ1JzM2LjAiTiAyOcKwNTUnMTIuMCJF!5e0!3m2!1sen!2str!4v1234567890"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3046.5!2d29.9419!3d40.7656!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cb4f9a6a0e2c4d%3A0x8b1a2b3c4d5e6f7a!2sWetnose%20Veteriner%20Klini%C4%9Fi!5e0!3m2!1str!2str!4v1702800000000!5m2!1str!2str"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="grayscale hover:grayscale-0 transition-all duration-500"
+                className="group-hover:grayscale-0 grayscale-[50%] transition-all duration-700"
               />
-              <div className="absolute top-4 left-4 glass px-3 py-1.5 rounded-full text-sm font-medium text-gray-700">
-                📍 İzmit, Kocaeli
+              
+              {/* Animated Location Pin with Pulse */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full pointer-events-none">
+                {/* Pulse Rings */}
+                <motion.div
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border-2 border-teal-400/50"
+                  animate={{ scale: [1, 2, 2], opacity: [0.5, 0.2, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
+                />
+                <motion.div
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border-2 border-teal-400/50"
+                  animate={{ scale: [1, 2, 2], opacity: [0.5, 0.2, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeOut', delay: 0.5 }}
+                />
+                <motion.div
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border-2 border-teal-400/50"
+                  animate={{ scale: [1, 2, 2], opacity: [0.5, 0.2, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeOut', delay: 1 }}
+                />
+                
+                {/* Pin */}
+                <motion.div
+                  className="relative"
+                  animate={{ y: [0, -15, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <div className="relative">
+                    <MapPin className="w-12 h-12 text-teal-400 drop-shadow-[0_0_15px_rgba(20,184,166,0.8)]" fill="rgba(20, 184, 166, 0.3)" />
+                    {/* Inner Glow */}
+                    <div className="absolute inset-0 w-12 h-12 bg-teal-400/30 blur-xl rounded-full" />
+                  </div>
+                  {/* Shadow */}
+                  <motion.div
+                    className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-6 h-2 bg-black/40 rounded-full blur-sm"
+                    animate={{ scale: [1, 0.7, 1], opacity: [0.6, 0.3, 0.6] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                </motion.div>
               </div>
+
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/80 via-transparent to-transparent pointer-events-none" />
+              
+              {/* CTA */}
+              <a
+                href="https://maps.app.goo.gl/4txq8rudU2TQm9HE9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute bottom-4 left-4 right-4 flex items-center justify-center space-x-2 bg-teal-500/25 backdrop-blur-xl border border-teal-400/35 hover:bg-teal-500/35 hover:border-teal-400/50 text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-teal-500/25 hover:shadow-[0_0_30px_rgba(20,184,166,0.4)] group/btn"
+              >
+                <Navigation className="w-5 h-5 group-hover/btn:rotate-45 transition-transform duration-300" />
+                <span>Yol Tarifi Al</span>
+              </a>
             </div>
+
+            {/* WhatsApp CTA */}
+            <motion.a
+              href="https://wa.me/905534845424"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.02, boxShadow: '0 0 40px rgba(34,197,94,0.4)' }}
+              whileTap={{ scale: 0.98 }}
+              className="relative flex items-center justify-center space-x-3 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 text-white font-semibold py-4 rounded-2xl transition-all shadow-lg shadow-green-500/25 overflow-hidden group"
+            >
+              {/* Shine Effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <MessageCircle className="w-6 h-6 relative z-10" />
+              <span className="relative z-10">WhatsApp ile Hızlı İletişim</span>
+            </motion.a>
           </motion.div>
 
-          {/* Contact Form */}
+          {/* Right - Randevu CTA Card */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <form
-              onSubmit={handleSubmit}
-              className="bg-white rounded-2xl shadow-lg p-8"
-            >
-              <h3 className="text-xl font-bold text-gray-900 mb-6">
-                Randevu Formu
-              </h3>
+            <div className="relative bg-gradient-to-br from-teal-500/20 to-cyan-500/10 backdrop-blur-xl border border-teal-400/30 rounded-3xl p-8 overflow-hidden hover:border-teal-400/50 transition-all duration-500 h-full flex flex-col">
+              {/* Background Effects */}
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 via-transparent to-cyan-500/5 pointer-events-none" />
+              <div className="absolute -top-40 -right-40 w-80 h-80 bg-teal-500/10 rounded-full blur-[100px] pointer-events-none" />
+              <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
+              
+              {/* Floating Paw Prints */}
+              <motion.div 
+                className="absolute top-10 right-10 text-teal-400/20 text-4xl"
+                animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
+                transition={{ duration: 4, repeat: Infinity }}
+              >
+                🐾
+              </motion.div>
+              <motion.div 
+                className="absolute bottom-20 left-10 text-teal-400/15 text-3xl"
+                animate={{ y: [0, 10, 0], rotate: [0, -5, 0] }}
+                transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+              >
+                🐾
+              </motion.div>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                      Adınız *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-medical-blue focus:ring-2 focus:ring-medical-blue/20 outline-none transition-all"
-                      placeholder="Adınız"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                      Telefon *
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-medical-blue focus:ring-2 focus:ring-medical-blue/20 outline-none transition-all"
-                      placeholder="05XX XXX XX XX"
-                    />
-                  </div>
+              <div className="relative flex-1 flex flex-col">
+                {/* Header */}
+                <div className="text-center mb-8">
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true }}
+                    className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-teal-400 to-cyan-400 flex items-center justify-center shadow-lg shadow-teal-500/30"
+                  >
+                    <Calendar className="w-10 h-10 text-white" />
+                  </motion.div>
+                  <h3 className="text-2xl font-bold text-white mb-3">Online Randevu</h3>
+                  <p className="text-gray-400">
+                    Hizmet seçimi ve saat tercihiyle kolayca randevu alın
+                  </p>
                 </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    E-posta
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-medical-blue focus:ring-2 focus:ring-medical-blue/20 outline-none transition-all"
-                    placeholder="ornek@email.com"
-                  />
+                {/* Features */}
+                <div className="space-y-4 mb-8 flex-1">
+                  {[
+                    { icon: '📅', text: 'Tarih ve saat seçimi' },
+                    { icon: '🏥', text: 'Hizmet türü seçimi' },
+                    { icon: '🐱', text: 'Kedi veya köpek için özel' },
+                    { icon: '⚡', text: 'Anında onay' },
+                  ].map((feature, index) => (
+                    <motion.div
+                      key={feature.text}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-center gap-3 text-gray-300"
+                    >
+                      <span className="text-xl">{feature.icon}</span>
+                      <span>{feature.text}</span>
+                    </motion.div>
+                  ))}
                 </div>
 
-                <div>
-                  <label htmlFor="petName" className="block text-sm font-medium text-gray-700 mb-1">
-                    Dostunuzun Adı
-                  </label>
-                  <input
-                    type="text"
-                    id="petName"
-                    name="petName"
-                    value={formData.petName}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-medical-blue focus:ring-2 focus:ring-medical-blue/20 outline-none transition-all"
-                    placeholder="Pamuk, Max, vb."
-                  />
-                </div>
+                {/* CTA Button */}
+                <Link href="/randevu">
+                  <motion.div
+                    whileHover={{ scale: 1.02, boxShadow: '0 0 50px rgba(20,184,166,0.5)' }}
+                    whileTap={{ scale: 0.98 }}
+                    className="relative w-full py-5 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-bold text-lg flex items-center justify-center gap-3 shadow-lg shadow-teal-500/30 overflow-hidden group cursor-pointer"
+                  >
+                    {/* Shine Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/25 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                    
+                    <Sparkles className="w-5 h-5 relative z-10" />
+                    <span className="relative z-10">Online Randevu Al</span>
+                    <motion.div
+                      className="relative z-10"
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <ArrowRight className="w-5 h-5" />
+                    </motion.div>
+                  </motion.div>
+                </Link>
 
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                    Mesajınız
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-medical-blue focus:ring-2 focus:ring-medical-blue/20 outline-none transition-all resize-none"
-                    placeholder="Nasıl yardımcı olabiliriz?"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting || submitted}
-                  className={cn(
-                    'w-full py-4 rounded-xl font-medium transition-all flex items-center justify-center space-x-2',
-                    submitted
-                      ? 'bg-green-500 text-white'
-                      : 'btn-premium'
-                  )}
-                >
-                  {isSubmitting ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  ) : submitted ? (
-                    <>
-                      <span>✓</span>
-                      <span>Gönderildi!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-5 h-5" />
-                      <span>Gönder</span>
-                    </>
-                  )}
-                </button>
+                {/* Info Note */}
+                <p className="text-center text-gray-500 text-sm mt-4">
+                  Acil durumlar için <a href="tel:05534845424" className="text-teal-400 hover:underline">0553 484 54 24</a> numarasını arayın
+                </p>
               </div>
-            </form>
+            </div>
           </motion.div>
         </div>
       </div>

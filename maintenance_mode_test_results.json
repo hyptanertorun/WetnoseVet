@@ -1,0 +1,79 @@
+[
+  {
+    "test": "Test 1.1: Maintenance Status Endpoint",
+    "success": true,
+    "details": "All required fields present. Current maintenance_mode: False",
+    "timestamp": "2025-12-26T18:29:41.857905+00:00",
+    "response_data": {
+      "maintenance_mode": false,
+      "maintenance_message": "Sitemiz \u015fu anda g\u00fcncelleniyor. \u00c7ok yak\u0131nda daha iyi bir deneyimle kar\u015f\u0131n\u0131zda olaca\u011f\u0131z!",
+      "maintenance_end_date": null,
+      "phone": "0553 484 54 24",
+      "whatsapp": "905534845424",
+      "email": "info@wetnose.com.tr"
+    }
+  },
+  {
+    "test": "Admin Login",
+    "success": true,
+    "details": "Successfully logged in as admin@wetnose.com.tr",
+    "timestamp": "2025-12-26T18:29:41.943355+00:00",
+    "response_data": {
+      "user_role": "admin"
+    }
+  },
+  {
+    "test": "Test 1.2: Enable Maintenance Mode",
+    "success": true,
+    "details": "Successfully enabled maintenance mode and verified via public endpoint",
+    "timestamp": "2025-12-26T18:29:42.017659+00:00",
+    "response_data": {
+      "maintenance_mode": true,
+      "message": "Sitemiz g\u00fcncelleniyor - Test mesaj\u0131"
+    }
+  },
+  {
+    "test": "Test 1.3: Disable Maintenance Mode",
+    "success": true,
+    "details": "Successfully disabled maintenance mode and verified via public endpoint",
+    "timestamp": "2025-12-26T18:29:42.128729+00:00",
+    "response_data": {
+      "maintenance_mode": false
+    }
+  },
+  {
+    "test": "API Access During Maintenance: /api/public/maintenance-status",
+    "success": true,
+    "details": "Public endpoint accessible during maintenance mode",
+    "timestamp": "2025-12-26T18:29:42.197755+00:00",
+    "response_data": null
+  },
+  {
+    "test": "API Access During Maintenance: /api/public/settings",
+    "success": true,
+    "details": "Public endpoint accessible during maintenance mode",
+    "timestamp": "2025-12-26T18:29:42.205837+00:00",
+    "response_data": null
+  },
+  {
+    "test": "API Access During Maintenance: /api/public/services",
+    "success": true,
+    "details": "Public endpoint accessible during maintenance mode",
+    "timestamp": "2025-12-26T18:29:42.214763+00:00",
+    "response_data": null
+  },
+  {
+    "test": "Admin API Access During Maintenance: /api/admin/settings",
+    "success": true,
+    "details": "Admin endpoint accessible during maintenance mode",
+    "timestamp": "2025-12-26T18:29:42.234567+00:00",
+    "response_data": null
+  },
+  {
+    "test": "Admin API Access During Maintenance: /api/auth/me",
+    "success": true,
+    "details": "Admin endpoint accessible during maintenance mode",
+    "timestamp": "2025-12-26T18:29:42.244888+00:00",
+    "response_data": null
+  }
+]
