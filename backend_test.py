@@ -99,8 +99,8 @@ class WetnoseAPITester:
             expected_status=200
         )
         
-        if response and 'token' in response:
-            self.token = response['token']
+        if response and 'access_token' in response:
+            self.token = response['access_token']
             print(f"🎫 Token received: {self.token[:20]}...")
             
             # Test auth/me endpoint with token
