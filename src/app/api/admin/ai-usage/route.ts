@@ -11,14 +11,18 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json({
       ai_enabled: !!openaiKey,
+      total_image_generations: 0,
+      total_blog_generations: 0,
+      total_revisions: 0,
+      last_7_days: {
+        image_generations: 0,
+        blog_generations: 0,
+        revisions: 0
+      },
+      estimated_cost_usd: 0,
       features: {
         blog_generation: !!openaiKey,
         image_generation: !!openaiKey
-      },
-      usage: {
-        total_generations: 0,
-        this_month: 0,
-        remaining_credits: openaiKey ? 'unlimited' : 0
       }
     })
   } catch (error) {
