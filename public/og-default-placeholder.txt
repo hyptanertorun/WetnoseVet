@@ -1,0 +1,8 @@
+OG Default Image Requirements:
+- Size: 1200x630 pixels
+- Format: JPG
+- Content: WETNOSE logo + clinic name
+- Background: Dark (#030712) or teal gradient
+- Save as: og-default.jpg
+
+For now, a placeholder has been noted.
