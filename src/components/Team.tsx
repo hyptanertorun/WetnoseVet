@@ -107,6 +107,13 @@ export default function Team() {
     fetchTeam()
   }, [])
 
+  // Debug log for troubleshooting
+  useEffect(() => {
+    if (!loading) {
+      console.log(`[Team Component] Loaded ${teamMembers.length} team members`)
+    }
+  }, [loading, teamMembers.length])
+
   // Calculate total experience
   const totalExperience = teamMembers.reduce((sum, m) => sum + (m.experience_years || 0), 0)
   const owners = teamMembers.filter(m => m.is_owner)
