@@ -50,9 +50,20 @@ export default function ClinicRhythm({ variant = 'default' }: { variant?: 'defau
     fetchData()
   }, [])
 
-  // Don't render if no data or still loading
+  // Don't render if no data or still loading - show empty state instead
   if (loading || !data || (!data.featured_question && !data.false_alarm)) {
-    return null
+    return (
+      <section className="py-12 md:py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-xl md:text-2xl font-semibold text-gray-800">
+            Klinik Ritmi
+          </h2>
+          <p className="text-sm text-gray-500 mt-2">
+            Günlük klinik bilgileri yakında yayınlanacak.
+          </p>
+        </div>
+      </section>
+    )
   }
 
   return (
