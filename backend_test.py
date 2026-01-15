@@ -221,6 +221,12 @@ class WetnoseAPITester:
         # Test authentication
         self.test_authentication()
         
+        # Test admin APIs (requires authentication)
+        self.test_admin_apis()
+        
+        # Test admin CRUD operations
+        self.test_admin_crud_operations()
+        
         # Test contact form
         self.test_contact_form()
         
