@@ -18,7 +18,7 @@ interface GalleryAlbum {
   slug: string
   description: string | null
   cover_image_url: string | null
-  status: 'active' | 'inactive'
+  status: 'published' | 'draft' | 'active' | 'inactive'
   item_count: number
   created_at: string | null
 }
