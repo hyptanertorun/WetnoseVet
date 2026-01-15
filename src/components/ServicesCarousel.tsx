@@ -1,8 +1,9 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   FlaskConical,
   Scan,
@@ -13,10 +14,27 @@ import {
   Scissors,
   Sparkles,
   ArrowRight,
+  Home,
+  Shield,
+  Activity,
+  Zap,
+  Heart,
+  Lightbulb,
+  Smile,
+  Bone,
 } from 'lucide-react'
-import { services } from '@/data/siteData'
 import TextReveal from './TextReveal'
 import { cn } from '@/lib/utils'
+
+// Service type from API
+interface Service {
+  id: string
+  title: string
+  slug: string
+  short_description: string
+  cover_image_url: string
+  icon: string
+}
 
 const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {
   flask: FlaskConical,
@@ -27,7 +45,17 @@ const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = 
   'heart-pulse': HeartPulse,
   scissors: Scissors,
   sparkles: Sparkles,
+  home: Home,
+  shield: Shield,
+  activity: Activity,
+  zap: Zap,
+  heart: Heart,
+  lightbulb: Lightbulb,
+  smile: Smile,
+  bone: Bone,
 }
+
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || ''
 
 // 3D Tilt Card Component
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -67,7 +95,27 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
 
 export default function ServicesCarousel() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
+  const [services, setServices] = useState<Service[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Fetch services from API
+  useEffect(() => {
+    async function fetchServices() {
+      try {
+        const response = await fetch(`${API_URL}/api/public/services`)
+        if (response.ok) {
+          const data = await response.json()
+          setServices(data.services || [])
+        }
+      } catch (error) {
+        console.error('Failed to fetch services:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchServices()
+  }, [])
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -75,6 +123,33 @@ export default function ServicesCarousel() {
   })
 
   const x = useTransform(scrollYProgress, [0, 1], ['0%', '-25%'])
+
+  // Loading state
+  if (loading) {
+    return (
+      <section id="services" className="relative py-24 lg:py-28 bg-gradient-to-b from-[#030712] via-[#0a0f1a] to-[#030712]">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto" />
+        </div>
+      </section>
+    )
+  }
+
+  // Empty state
+  if (services.length === 0) {
+    return (
+      <section id="services" className="relative py-24 lg:py-28 bg-gradient-to-b from-[#030712] via-[#0a0f1a] to-[#030712]">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center space-x-2 bg-teal-500/20 backdrop-blur-sm border border-teal-400/35 rounded-full px-5 py-2.5 mb-8">
+            <Sparkles className="w-4 h-4 text-teal-400" />
+            <span className="text-sm font-semibold text-teal-300">Profesyonel Hizmetler</span>
+          </div>
+          <h2 className="text-4xl font-bold text-white mb-4">Hizmetlerimiz</h2>
+          <p className="text-gray-400">Hizmetler yakında eklenecektir.</p>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section
@@ -155,7 +230,7 @@ export default function ServicesCarousel() {
                 whileInView={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ 
-                  delay: index * 0.15, 
+                  delay: index * 0.1, 
                   duration: 0.6,
                   ease: [0.25, 0.1, 0.25, 1]
                 }}
@@ -196,8 +271,8 @@ export default function ServicesCarousel() {
                     {/* Image */}
                     <div className="relative h-48 overflow-hidden">
                       <motion.img
-                        src={service.image}
-                        alt={service.name}
+                        src={service.cover_image_url}
+                        alt={service.title}
                         className="w-full h-full object-cover"
                         animate={{ scale: isHovered ? 1.1 : 1 }}
                         transition={{ duration: 0.6 }}
@@ -241,10 +316,10 @@ export default function ServicesCarousel() {
                         className="text-xl font-bold text-white mb-3 transition-colors duration-300"
                         animate={{ color: isHovered ? '#5eead4' : '#ffffff' }}
                       >
-                        {service.name}
+                        {service.title}
                       </motion.h3>
-                      <p className="text-gray-400 text-sm leading-relaxed mb-4">
-                        {service.description}
+                      <p className="text-gray-400 text-sm leading-relaxed mb-4 line-clamp-2">
+                        {service.short_description}
                       </p>
 
                       {/* Learn More */}
@@ -292,7 +367,7 @@ export default function ServicesCarousel() {
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  transition={{ delay: index * 0.05, duration: 0.5 }}
                   className="flex-shrink-0 w-72"
                 >
                   <Link href={`/hizmetler/${service.slug}`} className="block h-full">
@@ -303,8 +378,8 @@ export default function ServicesCarousel() {
                       {/* Image */}
                       <div className="relative h-40 overflow-hidden">
                         <img
-                          src={service.image}
-                          alt={service.name}
+                          src={service.cover_image_url}
+                          alt={service.title}
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/60 to-transparent" />
@@ -321,10 +396,10 @@ export default function ServicesCarousel() {
                       {/* Content */}
                       <div className="p-5">
                         <h3 className="text-lg font-bold text-white mb-2">
-                          {service.name}
+                          {service.title}
                         </h3>
                         <p className="text-gray-400 text-sm leading-relaxed line-clamp-2">
-                          {service.description}
+                          {service.short_description}
                         </p>
                       </div>
 
