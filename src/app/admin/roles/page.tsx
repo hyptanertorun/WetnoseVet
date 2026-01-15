@@ -112,8 +112,9 @@ export default function RolesPermissionsPage() {
     setMessage(null)
     
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || ''
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/roles/permissions/${role}`,
+        `${apiUrl}/api/admin/roles/permissions/${role}`,
         {
           method: 'PUT',
           headers: {
