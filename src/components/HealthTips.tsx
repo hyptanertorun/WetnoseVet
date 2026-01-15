@@ -63,9 +63,25 @@ export default function HealthTips() {
     )
   }
 
-  // Eğer hiç yazı yoksa bu bölümü gösterme
+  // Eğer hiç yazı yoksa empty state göster
   if (posts.length === 0) {
-    return null
+    return (
+      <section id="health-tips" className="py-20 bg-[#0a0f1a] relative overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center space-x-2 bg-cyan-500/20 backdrop-blur-sm border border-cyan-400/40 rounded-full px-5 py-2.5 mb-6">
+            <BookOpen className="w-4 h-4 text-cyan-400" />
+            <span className="text-sm font-semibold text-cyan-300">Sağlık Rehberi</span>
+          </div>
+          <h2 className="text-3xl lg:text-5xl font-bold text-white mt-2 mb-4">
+            Evcil Hayvan
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400"> Sağlık İpuçları</span>
+          </h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">
+            Sağlık rehberi yazıları yakında eklenecektir.
+          </p>
+        </div>
+      </section>
+    )
   }
 
   return (
