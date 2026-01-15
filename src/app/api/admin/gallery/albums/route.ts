@@ -8,10 +8,7 @@ export async function GET(request: NextRequest) {
     const authResult = await requireAdminManagerEditor(request)
     if (authResult instanceof NextResponse) return authResult
     
-    const url = new URL(request.url)
-    const limit = parseInt(url.searchParams.get('limit') || '50')
-    
-    const albums = await GalleryService.getAlbums({ limit })
+    const { albums, total } = await GalleryService.listAlbums()
     
     return NextResponse.json({
       albums: albums.map(album => ({
@@ -26,7 +23,7 @@ export async function GET(request: NextRequest) {
         created_at: album.created_at?.toISOString() || null,
         updated_at: album.updated_at?.toISOString() || null
       })),
-      total: albums.length
+      total
     })
   } catch (error) {
     console.error('Get gallery albums error:', error)
