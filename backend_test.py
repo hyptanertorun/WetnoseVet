@@ -108,6 +108,88 @@ class WetnoseAPITester:
         else:
             self.log_result("Token Extraction", False, "No token in login response")
 
+    def test_admin_apis(self):
+        """Test admin API endpoints"""
+        if not self.token:
+            self.log_result("Admin API Tests", False, "No authentication token available")
+            return
+            
+        print("\n🔧 Testing Admin API Endpoints...")
+        
+        # Test admin endpoints that require authentication
+        admin_endpoints = [
+            ("Admin Services List", "/api/admin/services"),
+            ("Admin Team Members List", "/api/admin/team-members"),
+            ("Admin Blog Posts List", "/api/admin/blog"),
+            ("Admin Gallery Albums List", "/api/admin/gallery"),
+            ("Admin Testimonials List", "/api/admin/testimonials"),
+        ]
+        
+        for name, endpoint in admin_endpoints:
+            self.test_api_endpoint(name, endpoint)
+    
+    def test_admin_crud_operations(self):
+        """Test CRUD operations for admin endpoints"""
+        if not self.token:
+            self.log_result("Admin CRUD Tests", False, "No authentication token available")
+            return
+            
+        print("\n📝 Testing Admin CRUD Operations...")
+        
+        # Test creating a new service
+        service_data = {
+            "title": "Test Service API",
+            "short_description": "Test service created via API",
+            "long_description": "This is a test service created during API testing",
+            "cover_image_url": "/uploads/test-service.jpg",
+            "cover_image_alt": "Test service image",
+            "price_mode": "fixed",
+            "price_value": 100,
+            "status": "active"
+        }
+        
+        service_response = self.test_api_endpoint(
+            "Create Service",
+            "/api/admin/services",
+            method="POST",
+            data=service_data,
+            expected_status=200
+        )
+        
+        # Test creating a team member
+        team_data = {
+            "full_name": "Test Veteriner",
+            "role_title": "Test Veteriner Hekim",
+            "bio": "Test bio for API testing",
+            "photo_url": "/uploads/test-vet.jpg",
+            "photo_alt": "Test veteriner photo",
+            "status": "active"
+        }
+        
+        team_response = self.test_api_endpoint(
+            "Create Team Member",
+            "/api/admin/team-members",
+            method="POST",
+            data=team_data,
+            expected_status=200
+        )
+        
+        # Test creating a blog post
+        blog_data = {
+            "title": "Test Blog Post API",
+            "excerpt": "Test blog post created via API",
+            "content": "This is test content for API testing",
+            "status": "draft"
+        }
+        
+        blog_response = self.test_api_endpoint(
+            "Create Blog Post",
+            "/api/admin/blog",
+            method="POST",
+            data=blog_data,
+            expected_status=200
+        )
+
     def test_contact_form(self):
         """Test contact form submission"""
         print("\n📧 Testing Contact Form...")
