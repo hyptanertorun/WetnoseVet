@@ -64,7 +64,8 @@ export default function RolesPermissionsPage() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/roles/permissions`, {
+      const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || ''
+      const response = await fetch(`${apiUrl}/api/admin/roles/permissions`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
