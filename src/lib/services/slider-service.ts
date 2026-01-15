@@ -195,4 +195,60 @@ export class SliderService {
     
     return this.getSettings()
   }
+  
+  // Seed example slides
+  static async seedSlides(): Promise<Slide[]> {
+    const slidesCollection = await getCollection<Slide>(COLLECTIONS.SLIDES)
+    
+    // Check if slides already exist
+    const existing = await slidesCollection.countDocuments({})
+    if (existing > 0) {
+      throw new Error('Zaten slide\'lar mevcut')
+    }
+    
+    const sampleSlides = [
+      {
+        title: 'Dostlarınız İçin En İyi Bakım',
+        subtitle: 'Wetnose Veteriner Kliniği olarak evcil dostlarınızın sağlığı için 7/24 hizmet veriyoruz.',
+        image_url: '/images/slider/slide1.jpg',
+        image_alt: 'Veteriner kliniği',
+        buttons: [
+          { text: 'Online Randevu Al', href: '/randevu', style: 'primary' as ButtonStyle, icon: 'calendar', is_visible: true },
+          { text: 'Hizmetlerimiz', href: '/hizmetler', style: 'secondary' as ButtonStyle, icon: 'play', is_visible: true }
+        ]
+      },
+      {
+        title: 'Uzman Veteriner Kadromuz',
+        subtitle: '10 yılı aşkın deneyime sahip uzman veteriner hekimlerimizle yanınızdayız.',
+        image_url: '/images/slider/slide2.jpg',
+        image_alt: 'Veteriner ekibi',
+        buttons: [
+          { text: 'Ekibimizi Tanıyın', href: '/ekibimiz', style: 'primary' as ButtonStyle, icon: 'users', is_visible: true }
+        ]
+      },
+      {
+        title: '7/24 Acil Veteriner Hizmeti',
+        subtitle: 'Acil durumlar için günün her saati ulaşabilirsiniz.',
+        image_url: '/images/slider/slide3.jpg',
+        image_alt: 'Acil veteriner hizmeti',
+        buttons: [
+          { text: 'Hemen Ara', href: 'tel:+902625551234', style: 'primary' as ButtonStyle, icon: 'phone', is_visible: true },
+          { text: 'Konum', href: '/iletisim', style: 'secondary' as ButtonStyle, icon: 'arrow-right', is_visible: true }
+        ]
+      }
+    ]
+    
+    const createdSlides: Slide[] = []
+    
+    for (let i = 0; i < sampleSlides.length; i++) {
+      const slideData = sampleSlides[i]
+      const slide = await this.createSlide({
+        ...slideData,
+        is_active: true
+      })
+      createdSlides.push(slide)
+    }
+    
+    return createdSlides
+  }
 }
