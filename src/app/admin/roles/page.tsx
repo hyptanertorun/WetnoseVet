@@ -147,8 +147,9 @@ export default function RolesPermissionsPage() {
     
     setSaving('reset')
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || ''
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/roles/permissions/reset`,
+        `${apiUrl}/api/admin/roles/permissions/reset`,
         {
           method: 'POST',
           headers: {
