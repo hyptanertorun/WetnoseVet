@@ -57,16 +57,57 @@ export class TeamService {
   }
   
   // Get published team members (public)
+  // Backward-compatible query: handles different status field values from various DB versions
   static async getPublished(): Promise<TeamMember[]> {
     const membersCollection = await getCollection<TeamMember>(COLLECTIONS.TEAM_MEMBERS)
     
-    return membersCollection
-      .find({
-        status: 'published',
-        archived_at: null
-      })
-      .sort({ sort_order: 1 })
+    // Build a tolerant query that accepts multiple status formats
+    // Production DB may use: status: "published", status: true, isActive: true, or no status field
+    const query = {
+      $and: [
+        // Status check: accept "published", true, or missing status field (legacy data)
+        {
+          $or: [
+            { status: 'published' },
+            { status: true },
+            { isActive: true },
+            { is_active: true },
+            // Include records where status doesn't exist but isPublished is true
+            { isPublished: true },
+            { is_published: true },
+            // Legacy: if no status fields exist, include if not explicitly draft/archived
+            { 
+              $and: [
+                { status: { $exists: false } },
+                { isActive: { $exists: false } },
+                { is_active: { $exists: false } }
+              ]
+            }
+          ]
+        },
+        // Archived check: must be null, not exist, or be false
+        {
+          $or: [
+            { archived_at: null },
+            { archived_at: { $exists: false } },
+            { archived: false },
+            { archived: { $exists: false } },
+            { is_archived: false },
+            { is_archived: { $exists: false } }
+          ]
+        }
+      ]
+    }
+    
+    const members = await membersCollection
+      .find(query)
+      .sort({ sort_order: 1, created_at: -1 })
       .toArray()
+    
+    // Debug logging for production troubleshooting
+    console.log(`[TeamService.getPublished] Found ${members.length} team members`)
+    
+    return members
   }
   
   // Get by ID
@@ -76,13 +117,49 @@ export class TeamService {
   }
   
   // Get by slug (public)
+  // Backward-compatible query for different DB schemas
   static async getPublishedBySlug(slug: string): Promise<TeamMember | null> {
     const membersCollection = await getCollection<TeamMember>(COLLECTIONS.TEAM_MEMBERS)
-    return membersCollection.findOne({
+    
+    // Tolerant query for slug lookup
+    const query = {
       slug,
-      status: 'published',
-      archived_at: null
-    })
+      $and: [
+        // Status check
+        {
+          $or: [
+            { status: 'published' },
+            { status: true },
+            { isActive: true },
+            { is_active: true },
+            { isPublished: true },
+            { is_published: true },
+            { 
+              $and: [
+                { status: { $exists: false } },
+                { isActive: { $exists: false } }
+              ]
+            }
+          ]
+        },
+        // Archived check
+        {
+          $or: [
+            { archived_at: null },
+            { archived_at: { $exists: false } },
+            { archived: false },
+            { archived: { $exists: false } }
+          ]
+        }
+      ]
+    }
+    
+    const member = await membersCollection.findOne(query)
+    
+    // Debug logging
+    console.log(`[TeamService.getPublishedBySlug] slug=${slug}, found=${!!member}`)
+    
+    return member
   }
   
   // Create team member
