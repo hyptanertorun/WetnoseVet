@@ -122,7 +122,20 @@ export default function Team() {
   }
 
   if (teamMembers.length === 0) {
-    return null
+    return (
+      <section id="team" className="py-24 bg-[#030712] relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="inline-flex items-center space-x-2 bg-teal-500/20 backdrop-blur-sm border border-teal-400/35 rounded-full px-5 py-2.5 mb-6">
+            <Users className="w-4 h-4 text-teal-400" />
+            <span className="text-sm font-semibold text-teal-300">Uzman Kadro</span>
+          </div>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white mt-2">Ekibimiz</h2>
+          <p className="text-gray-400 mt-4 max-w-2xl mx-auto text-lg">
+            Ekip bilgileri yakında eklenecektir.
+          </p>
+        </div>
+      </section>
+    )
   }
 
   return (
