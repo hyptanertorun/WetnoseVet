@@ -316,25 +316,25 @@ export default function Footer() {
                     className="flex items-start gap-3 text-gray-400 hover:text-teal-400 transition-colors group"
                   >
                     <MapPin className="w-5 h-5 text-teal-500/50 group-hover:text-teal-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm leading-relaxed">{siteInfo.address}</span>
+                    <span className="text-sm leading-relaxed">{settings?.address || siteInfo.address}</span>
                   </a>
                 </li>
                 <li>
                   <a 
-                    href={`tel:${siteInfo.phone.replace(/\s/g, '')}`}
+                    href={`tel:${(settings?.phone || siteInfo.phone).replace(/\s/g, '')}`}
                     className="flex items-center gap-3 text-gray-400 hover:text-teal-400 transition-colors group"
                   >
                     <Phone className="w-5 h-5 text-teal-500/50 group-hover:text-teal-400" />
-                    <span>{siteInfo.phone}</span>
+                    <span>{settings?.phone || siteInfo.phone}</span>
                   </a>
                 </li>
                 <li>
                   <a 
-                    href={`mailto:${siteInfo.email}`}
+                    href={`mailto:${settings?.email || siteInfo.email}`}
                     className="flex items-center gap-3 text-gray-400 hover:text-teal-400 transition-colors group"
                   >
                     <Mail className="w-5 h-5 text-teal-500/50 group-hover:text-teal-400" />
-                    <span>{siteInfo.email}</span>
+                    <span>{settings?.email || siteInfo.email}</span>
                   </a>
                 </li>
                 <li className="flex items-center gap-3 text-gray-400">
