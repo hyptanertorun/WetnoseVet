@@ -61,7 +61,7 @@ export default function AdminGalleryPage() {
   const loadAlbums = async () => {
     setLoading(true)
     try {
-      const res = await adminApi.request<{albums: GalleryAlbum[], total: number}>('/api/admin/gallery/albums?limit=50')
+      const res = await adminApi.request<{albums: GalleryAlbum[], total: number}>('/api/admin/gallery')
       if (res.data) {
         setAlbums(res.data.albums)
       }
