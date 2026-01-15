@@ -3,7 +3,7 @@ import { TeamService } from '@/lib/services/team-service'
 
 export async function GET(request: NextRequest) {
   try {
-    const { members } = await TeamService.listMembers({ activeOnly: true })
+    const members = await TeamService.getPublished()
     
     return NextResponse.json({
       team_members: members.map(m => ({
