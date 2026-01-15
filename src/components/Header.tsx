@@ -126,7 +126,7 @@ export default function Header() {
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
             <motion.a
-              href={`tel:${siteInfo.phone.replace(/\s/g, '')}`}
+              href={`tel:${(settings?.phone || siteInfo.phone).replace(/\s/g, '')}`}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.05 }}
@@ -134,7 +134,7 @@ export default function Header() {
               data-cursor="pointer"
             >
               <Phone className="w-4 h-4" />
-              <span className="font-medium">{siteInfo.phone}</span>
+              <span className="font-medium">{settings?.phone || siteInfo.phone}</span>
             </motion.a>
             <MagneticButton href="/randevu" variant="header" className="!py-2.5 !px-5 !text-sm">
               Online Randevu Al
