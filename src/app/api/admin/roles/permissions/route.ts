@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyToken } from '@/lib/middleware/auth'
+import { verifyAuth } from '@/lib/middleware/auth'
 
 // Define available permissions
 const AVAILABLE_PERMISSIONS = [
