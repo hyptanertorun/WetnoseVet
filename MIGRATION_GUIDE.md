@@ -44,6 +44,7 @@ This project has been migrated from React + FastAPI to a **full Next.js 14+ appl
 ### Public API Routes
 | FastAPI Route | Next.js Route | Status |
 |--------------|---------------|--------|
+| GET /api/status | GET /api/status | ✅ (NEW - Returns DB connection info) |
 | GET /api/public/settings | GET /api/public/settings | ✅ |
 | GET /api/public/maintenance-status | GET /api/public/maintenance-status | ✅ |
 | GET /api/public/services | GET /api/public/services | ✅ |
