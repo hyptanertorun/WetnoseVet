@@ -17,7 +17,7 @@ interface PageProps {
 // Fetch team member data - Server side
 async function getTeamMember(slug: string) {
   try {
-    const res = await fetch(`${API_URL}/api/public/team/${slug}`, {
+    const res = await fetch(`${API_URL}/api/public/team-members/${slug}`, {
       next: { revalidate: 60 }, // Revalidate every 60 seconds
     })
     
