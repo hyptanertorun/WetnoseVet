@@ -9,10 +9,19 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import Image from 'next/image'
 
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || ''
+
+interface PublicSettings {
+  phone: string
+  whatsapp: string
+  email: string
+}
+
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [settings, setSettings] = useState<PublicSettings | null>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -20,6 +29,13 @@ export default function Header() {
       setIsScrolled(window.scrollY > 50)
     }
     window.addEventListener('scroll', handleScroll)
+    
+    // Fetch settings
+    fetch(`${API_URL}/api/public/settings`)
+      .then(res => res.json())
+      .then(data => setSettings(data))
+      .catch(console.error)
+    
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
