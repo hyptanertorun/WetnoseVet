@@ -139,7 +139,7 @@ export default function AdminGalleryPage() {
       // Update progress to uploading
       setUploadProgress(prev => prev.map(p => ({ ...p, status: 'uploading' as const, progress: 50 })))
       
-      const response = await fetch(`/api/admin/gallery/albums/${selectedAlbum.id}/upload`, {
+      const response = await fetch(`/api/admin/gallery/${selectedAlbum.id}/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -292,7 +292,7 @@ export default function AdminGalleryPage() {
   // Album CRUD handlers
   const handleCreateAlbum = async (title: string, description: string) => {
     try {
-      await adminApi.request('/api/admin/gallery/albums', {
+      await adminApi.request('/api/admin/gallery', {
         method: 'POST',
         body: JSON.stringify({ title, description })
       })
@@ -305,7 +305,7 @@ export default function AdminGalleryPage() {
 
   const handleUpdateAlbum = async (albumId: string, data: Partial<GalleryAlbum>) => {
     try {
-      await adminApi.request(`/api/admin/gallery/albums/${albumId}`, {
+      await adminApi.request(`/api/admin/gallery/${albumId}`, {
         method: 'PUT',
         body: JSON.stringify(data)
       })
@@ -323,7 +323,7 @@ export default function AdminGalleryPage() {
     if (!confirm('Bu albümü ve tüm görsellerini silmek istediğinize emin misiniz?')) return
     
     try {
-      await adminApi.request(`/api/admin/gallery/albums/${albumId}`, { method: 'DELETE' })
+      await adminApi.request(`/api/admin/gallery/${albumId}`, { method: 'DELETE' })
       await loadAlbums()
       if (selectedAlbum?.id === albumId) {
         setSelectedAlbum(null)
