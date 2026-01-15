@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyToken } from '@/lib/middleware/auth'
+import { verifyAuth } from '@/lib/middleware/auth'
 
 // POST: Reset all role permissions to defaults
 export async function POST(request: NextRequest) {
   try {
-    const authResult = await verifyToken(request)
-    if (authResult instanceof NextResponse) return authResult
+    const authResult = await verifyAuth(request)
+    if (!authResult.user) {
+      return NextResponse.json(
+        { detail: authResult.error || 'Yetkisiz erişim' },
+        { status: 401 }
+      )
+    }
     
     // Check if user is admin
-    if (authResult.role !== 'admin') {
+    if (authResult.user.role !== 'admin') {
       return NextResponse.json(
         { detail: 'Bu işlem için yetkiniz yok' },
         { status: 403 }
