@@ -33,13 +33,25 @@ export default function ClinicRhythm({ variant = 'default' }: { variant?: 'defau
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch(`${API_URL}/api/public/clinic-rhythm/today`)
+        // First try today's content
+        let response = await fetch(`${API_URL}/api/public/clinic-rhythm/today`)
+        let result = null
+        
         if (response.ok) {
-          const result = await response.json()
-          // Only set data if there's actual content
-          if (result.date_key && (result.featured_question || result.false_alarm)) {
-            setData(result)
+          result = await response.json()
+        }
+        
+        // If no content for today, fallback to latest published
+        if (!result?.featured_question && !result?.false_alarm) {
+          response = await fetch(`${API_URL}/api/public/clinic-rhythm/latest`)
+          if (response.ok) {
+            result = await response.json()
           }
+        }
+        
+        // Set data if there's actual content
+        if (result?.date_key && (result.featured_question || result.false_alarm)) {
+          setData(result)
         }
       } catch (error) {
         console.error('Failed to fetch clinic rhythm:', error)
