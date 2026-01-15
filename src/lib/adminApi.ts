@@ -8,13 +8,14 @@ interface ApiResponse<T> {
 
 class AdminApi {
   private getApiUrl(): string {
-    // Use NEXT_PUBLIC_BACKEND_URL for API calls
-    // In production, ingress routes /api to backend
-    // In development, we need the external URL
+    // In Kubernetes/production environments, ingress routes /api to backend on same origin
+    // So we should return empty string to use relative URLs (/api/...)
+    // NEXT_PUBLIC_BACKEND_URL is only needed for external/different domain APIs
     const envUrl = process.env.NEXT_PUBLIC_BACKEND_URL
     if (envUrl) return envUrl
-    if (typeof window === 'undefined') return ''
-    return window.location.origin
+    // For production preview and local development, use relative URLs (empty string)
+    // This allows the ingress/proxy to route /api/* correctly
+    return ''
   }
   
   private getToken(): string | null {
