@@ -74,7 +74,7 @@ export default function AdminGalleryPage() {
   const loadItems = async (albumId: string) => {
     setLoadingItems(true)
     try {
-      const res = await adminApi.request<{items: GalleryItem[], total: number}>(`/api/admin/gallery/albums/${albumId}/items`)
+      const res = await adminApi.request<{items: GalleryItem[], total: number}>(`/api/admin/gallery/${albumId}/items`)
       if (res.data) {
         setItems(res.data.items.sort((a, b) => a.sort_order - b.sort_order))
       }
