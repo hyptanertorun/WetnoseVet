@@ -195,6 +195,33 @@ yarn start
 - No breaking changes to existing data
 - Compatible with the existing production database
 
+## Database Seeding (Local/Staging)
+For local or staging environments, use the seed script:
+```bash
+yarn seed
+```
+This populates the database with sample data for services, team members, blog posts, testimonials, gallery, and clinic rhythm. The script is **idempotent** - running it multiple times will not create duplicates.
+
+## Status Endpoint
+Use `/api/status` to verify database connection:
+```bash
+curl http://yourdomain.com/api/status
+```
+Response:
+```json
+{
+  "status": "ok",
+  "environment": "production",
+  "database": {
+    "name": "wetnose_db",
+    "host": "your-cluster.mongodb.net",
+    "connected": true,
+    "collections_count": 15
+  },
+  "timestamp": "2026-01-15T00:00:00.000Z"
+}
+```
+
 ## Key Features
 - ✅ Full-stack Next.js 14+ with App Router
 - ✅ Server-side API routes (replaces FastAPI)
