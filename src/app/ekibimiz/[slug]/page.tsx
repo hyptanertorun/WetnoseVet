@@ -2,7 +2,8 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import TeamMemberDetailClient from './TeamMemberDetailClient'
 
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || ''
+// For server-side fetching, we need to use internal URL since Next.js runs on same server
+const API_URL = process.env.INTERNAL_API_URL || 'http://localhost:3000'
 const BASE_URL = 'https://www.wetnose.com.tr'
 
 // Force dynamic rendering
