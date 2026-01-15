@@ -37,6 +37,15 @@ React frontend + FastAPI backend projesinin full-stack Next.js uygulamasına ge�
 
 ## Tamamlanan İşler (15 Ocak 2026)
 
+### P0 QA Kontrolü (Test Edildi)
+- Settings CRUD: GET/PUT ✅
+- Services CRUD: GET/POST/PUT/DELETE ✅
+- Team Members CRUD: GET/POST/PUT/DELETE ✅
+- Gallery CRUD: GET/POST/PUT/DELETE ✅
+- Roles: GET ✅
+- **Slider CRUD: GET/POST/PUT/DELETE/REORDER/SETTINGS ✅**
+- Mobil Responsive: 4 viewport test edildi ✅
+
 ### Backend API
 - Settings CRUD: GET/PUT /api/admin/settings ✅
 - Services CRUD: GET/POST/PUT/DELETE /api/admin/services ✅
