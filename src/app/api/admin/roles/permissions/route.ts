@@ -51,11 +51,16 @@ const DEFAULT_ROLES = [
 // GET: Fetch all roles and permissions
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await verifyToken(request)
-    if (authResult instanceof NextResponse) return authResult
+    const authResult = await verifyAuth(request)
+    if (!authResult.user) {
+      return NextResponse.json(
+        { detail: authResult.error || 'Yetkisiz erişim' },
+        { status: 401 }
+      )
+    }
     
     // Check if user is admin
-    if (authResult.role !== 'admin') {
+    if (authResult.user.role !== 'admin') {
       return NextResponse.json(
         { detail: 'Bu işlem için yetkiniz yok' },
         { status: 403 }
