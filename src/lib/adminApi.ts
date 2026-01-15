@@ -775,12 +775,12 @@ class AdminApi {
     
     try {
       // Try to get existing album
-      const albumsRes = await this.request<{ albums: Array<{ id: string; slug: string }> }>('/api/admin/gallery/albums')
+      const albumsRes = await this.request<{ albums: Array<{ id: string; slug: string }> }>('/api/admin/gallery')
       const ekipAlbum = albumsRes.data?.albums.find(a => a.slug === 'ekip')
       
       if (!ekipAlbum) {
         // Create album
-        const createRes = await this.request<{ id: string }>('/api/admin/gallery/albums', {
+        const createRes = await this.request<{ id: string }>('/api/admin/gallery', {
           method: 'POST',
           body: JSON.stringify({
             name: 'Ekip',
@@ -800,7 +800,7 @@ class AdminApi {
     }
     
     // Upload to album
-    const response = await fetch(`${this.getApiUrl()}/api/admin/gallery/albums/${albumId}/upload`, {
+    const response = await fetch(`${this.getApiUrl()}/api/admin/gallery/${albumId}/upload`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
