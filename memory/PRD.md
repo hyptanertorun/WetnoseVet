@@ -88,6 +88,9 @@ React frontend + FastAPI backend projesinin full-stack Next.js uygulamasına ge�
 └── test_reports/            # Test results
 ```
 
+## Changelog
+- **2026-07-09 — Ana sayfa stil hatası (P0) DÜZELTİLDİ**: Ana sayfa tamamen stilsiz (raw HTML) görünüyordu. Kök neden: production build'de (`next start`) Tailwind CSS çıktısı boştu (17KB, hiç utility class yok) — çünkü iki çakışan Tailwind config dosyası vardı (`tailwind.config.js` shadcn-HSL teması + `tailwind.config.ts` medical teması). Çözüm: kullanılmayan gereksiz `tailwind.config.js` silindi, `yarn build` ile yeniden derlendi, frontend yeniden başlatıldı. Artık 106KB tam CSS bundle (~1290 kural) yükleniyor ve tüm sayfalar düzgün stillendi. Testing agent ile doğrulandı (9/9 public route %100).
+
 ## Admin Credentials
 - Email: admin@wetnose.com.tr
 - Password: WetnoseStage2026!
