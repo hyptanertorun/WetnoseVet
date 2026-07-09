@@ -93,4 +93,4 @@ React frontend + FastAPI backend projesinin full-stack Next.js uygulamasÄ±na geÃ
 - Password: WetnoseStage2026!
 
 ## Preview URL
-https://vetclinic-next.preview.emergentagent.com
+https://rhythm-loop-test.preview.emergentagent.com

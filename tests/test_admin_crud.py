@@ -7,7 +7,7 @@ import requests
 import os
 import time
 
-BASE_URL = "https://vetclinic-next.preview.emergentagent.com"
+BASE_URL = "https://rhythm-loop-test.preview.emergentagent.com"
 ADMIN_EMAIL = "admin@wetnose.com.tr"
 ADMIN_PASSWORD = "WetnoseStage2026!"
 

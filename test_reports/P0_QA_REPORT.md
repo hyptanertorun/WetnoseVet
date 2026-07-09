@@ -162,7 +162,7 @@
 ## ⚠️ BİLİNEN DÜŞÜK ÖNCELİKLİ NOTLAR
 
 1. **Preview URL Geçici Erişim Sorunu**
-   - URL: https://vetclinic-next.preview.emergentagent.com
+   - URL: https://rhythm-loop-test.preview.emergentagent.com
    - Durum: Geçici olarak "404 page not found" dönüyor
    - Etki: Lokal testler başarılı, production'a etkisi yok
    - Workaround: Lokal ortamda tüm testler tamamlandı

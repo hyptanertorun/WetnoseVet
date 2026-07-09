@@ -22,7 +22,7 @@
 
 ## 1️⃣ ERİŞİM & ORTAM DOĞRULAMA
 
-### Preview URL (https://vetclinic-next.preview.emergentagent.com)
+### Preview URL (https://rhythm-loop-test.preview.emergentagent.com)
 | Test | Durum | HTTP Code |
 |------|-------|-----------|
 | Ana sayfa | ✅ PASS | 200 |
@@ -189,7 +189,7 @@
 ### ❌ FAIL OLANLAR (2/36)
 
 **1. Preview URL API Routes**
-- URL: https://vetclinic-next.preview.emergentagent.com/api/*
+- URL: https://rhythm-loop-test.preview.emergentagent.com/api/*
 - Adım: Herhangi bir API endpoint'ine istek at
 - Neden: Platform preview ortamında Next.js API routes desteklemiyor
 - Çözüm: Production deployment'ta düzelecek (platform sınırlaması)
