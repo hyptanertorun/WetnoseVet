@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor } from '@/lib/middleware/auth'
 import { ClinicRhythmService, PoolService } from '@/lib/services/clinic-rhythm-service'
 import type { ServiceStatus } from '@/lib/models/types'

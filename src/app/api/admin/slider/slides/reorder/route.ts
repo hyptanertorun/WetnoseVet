@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor } from '@/lib/middleware/auth'
 import { SliderService } from '@/lib/services/slider-service'
 

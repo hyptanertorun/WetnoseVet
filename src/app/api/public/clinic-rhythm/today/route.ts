@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { ClinicRhythmService, PoolService } from '@/lib/services/clinic-rhythm-service'
 
 // Calculate which day in the 60-day cycle we're on

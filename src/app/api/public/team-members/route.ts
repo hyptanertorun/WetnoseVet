@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { TeamService } from '@/lib/services/team-service'
 
 export async function GET() {

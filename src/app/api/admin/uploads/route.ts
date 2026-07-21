@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor } from '@/lib/middleware/auth'
 import { writeFile, mkdir } from 'fs/promises'
 import { existsSync } from 'fs'
@@ -17,7 +18,8 @@ export async function POST(request: NextRequest) {
     
     const formData = await request.formData()
     const file = formData.get('file') as File | null
-    const category = (formData.get('category') as string) || 'general'
+    const rawCategory = (formData.get('category') as string) || 'general'
+    const category = rawCategory.replace(/[^a-zA-Z0-9_-]/g, '') || 'general'
     
     if (!file) {
       return NextResponse.json({ detail: 'Dosya gerekli' }, { status: 400 })

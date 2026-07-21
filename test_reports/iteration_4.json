@@ -1,0 +1,50 @@
+{
+  "summary": "Production Readiness Audit regression test. 29/29 backend/API pytest cases PASS via localhost:3000. All 9 public pages load (200 + full styling), sitemap.xml is dynamic with blog URLs, robots.txt OK, 404 page OK, security headers (X-Frame-Options=SAMEORIGIN, X-Content-Type-Options=nosniff) present, admin login + dashboard work, admin auth guard returns 401 without token, service detail /hizmetler/laboratuvar shows corrected title 'Laboratuvar' (stale title fix confirmed), force-dynamic + no-store cache freshness VERIFIED (admin update to service is immediately visible on public API). Contact + appointment endpoints return 200 (429 after rate-limit threshold — behaving correctly). Admin CRUD (create → update → soft-delete/archive) works for services.",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "GET /api/admin/services/[serviceId]", "issue": "Response leaks MongoDB internal _id field (e.g. '_id':'6a5fbeb388e5305372f9eca4') alongside the app id. Violates DTO discipline (also project code review rule).", "priority": "HIGH"}
+    ],
+    "minor": [
+      {"endpoint": "DELETE /api/admin/services/[serviceId]", "issue": "Is a soft-delete (archive) — record stays in collection with unique slug reserved. Trying to CREATE later with same slug then UPDATE fails with 500 E11000 (dup key) instead of a 400/409 clean error. Consider returning 409 with clear message, or freeing the slug on archive."},
+      {"endpoint": "public forms", "issue": "Rate-limit window is very long (~60min per IP). Regression tests hit 429 after a couple of submissions. Acceptable for prod but consider a lower window for repeated identical test IPs / whitelist."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "data_issues": [
+    {"severity": "HIGH", "location": "collection team_members / /api/public/team", "issue": "Only 10 team members returned but the audit spec expects 13. Also member #1 has full_name='Güncellenmiş Üye İsmi' and bio='Güncellenmiş biyografi' — this is leftover QA/test data that must be reverted to the real name (photo_url is 'team-hasan-murat-turkan.jpeg'). Visible on public /ekibimiz page. Blocks production readiness."},
+    {"severity": "INFRA", "location": "External preview URL", "issue": "https://9aa6aeb2-90c9-4253-b080-0e346b426a59.preview.emergentagent.com/ returns Emergent's 'Preview Unavailable' 404 (Cloudflare/Webflow) for ALL routes including /api/*. The container app on localhost:3000 is fully healthy — this is an ingress/proxy issue outside the app code. User cannot access the app externally right now."}
+  ],
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Restore team member #1 (Hasan Murat Turkan) real full_name and bio in DB — currently 'Güncellenmiş Üye İsmi'/'Güncellenmiş biyografi'. This is stale QA data still visible publicly.",
+    "Investigate missing 3 team members — spec expects 13, DB returns only 10.",
+    "Exclude MongoDB '_id' from GET /api/admin/services/[id] response (and audit other admin GET-by-id endpoints for the same leak).",
+    "External preview URL routing is broken (serves Emergent 404 page). Restart / re-map the preview so ingress routes to container port 3000 before releasing to user.",
+    "Consider hard-delete-on-empty-slug or return 409 (not 500) for slug conflicts against archived services."
+  ],
+  "critical_code_review_comments": [
+    "Verified 'export const dynamic = force-dynamic' fix is effective: after PUT /api/admin/services/{id} the public /api/public/services immediately reflects the new title (CACHE_FRESH_CHECK=True).",
+    "Verified security headers X-Frame-Options=SAMEORIGIN, X-Content-Type-Options=nosniff on / — Referrer-Policy / Permissions-Policy not explicitly asserted but assumed set (see next.config.js).",
+    "Verified sitemap.xml is now DB-driven and includes blog URLs (saglik-rehberi/kedi-beslenmesi-rehberi, kopek-asi-takvimi, dis-sagligi-onemi, yaz-sicaklarinda-evcil-hayvan, ...).",
+    "Verified /hizmetler/laboratuvar title is 'Laboratuvar' (stale 'Güncellenmiş Hizmet Başlığı' fix confirmed).",
+    "Admin GET-by-id endpoint returning raw Mongo document (_id present) — one of the project's own code-review guidelines is 'MongoDB ObjectId - Always exclude mongodb objectId _id'. Fix required.",
+    "Admin login route returns access_token cookie AND presumably body — flow works, dashboard loads with real KPIs."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py (created — 29 pytest cases covering public pages, security headers, sitemap, robots, 404, public APIs, contact/appointment, admin auth guard, admin services CRUD + cache freshness, admin pages load)"
+  ],
+  "success_rate": {"backend": "100% (29/29)", "frontend": "100% (all 9 public pages load styled; admin login/dashboard working)"},
+  "test_credentials": "Admin: admin@wetnose.com.tr / WetnoseStage2026! (works on localhost:3000/admin/login). NOTE: /app/memory/test_credentials.md does not exist — main agent should create it.",
+  "seed_data_creation": "None. Created + hard-deleted TEST_ services during CRUD test (test uses unique slug per run and also does pymongo hard-delete after DELETE archive call).",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Preview URL was down (Emergent 404 page) during this run — tests were executed against http://localhost:3000. Backend suite lives at /app/backend/tests/backend_test.py, BASE_URL env override supported via TEST_BASE_URL. All fixes from this audit iteration (force-dynamic, no-store, security headers, sitemap.ts DB-direct, laboratuvar title, JWT env fail-fast) are validated. Two data-cleanliness gaps remain: (1) team member 1 name still 'Güncellenmiş Üye İsmi' shown on public /ekibimiz, (2) team count = 10 (expected 13). Also admin GET /api/admin/services/[id] leaks Mongo _id — fix and re-verify.",
+  "rca of the issue": "N/A - main agent's fixes verified working. Remaining items are (a) leftover QA data in team_members collection not cleaned during 'DB cleanup' step and (b) an unrelated MongoDB _id leak in admin services detail response."
+}

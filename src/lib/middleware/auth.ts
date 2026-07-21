@@ -3,8 +3,11 @@ import jwt from 'jsonwebtoken'
 import { getCollection, COLLECTIONS } from '@/lib/db/mongodb'
 import type { User } from '@/lib/models/types'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'wetnose-super-secret-key-change-in-production-2024'
+const JWT_SECRET = process.env.JWT_SECRET as string
+if (!JWT_SECRET) throw new Error('JWT_SECRET environment variable is required')
 const JWT_ALGORITHM = 'HS256'
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET as string
+if (!JWT_REFRESH_SECRET) throw new Error('JWT_REFRESH_SECRET environment variable is required')
 
 export interface JWTPayload {
   sub: string // user_id
@@ -88,7 +91,7 @@ export function createRefreshToken(userId: string, days: number = 7): { token: s
       sub: userId,
       type: 'refresh'
     },
-    process.env.JWT_REFRESH_SECRET || 'wetnose-refresh-secret-key-change-in-production-2024',
+    JWT_REFRESH_SECRET,
     {
       algorithm: JWT_ALGORITHM as jwt.Algorithm,
       expiresIn: `${days}d`

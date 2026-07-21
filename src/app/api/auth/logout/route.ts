@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { requireAuth, getClientIP, getUserAgent } from '@/lib/middleware/auth'
 import { AuthService } from '@/lib/services/auth-service'
 import { AuditService } from '@/lib/services/audit-service'

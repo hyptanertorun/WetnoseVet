@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { verifyAuth } from '@/lib/middleware/auth'
 
 // POST: Reset all role permissions to defaults

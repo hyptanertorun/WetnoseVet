@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { ContactService } from '@/lib/services/contact-service'
 import { checkPublicFormRateLimit, rateLimitResponse } from '@/lib/middleware/rate-limit'
 

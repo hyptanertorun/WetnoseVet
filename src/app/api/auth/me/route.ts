@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { requireAuth } from '@/lib/middleware/auth'
 
 export async function GET(request: NextRequest) {

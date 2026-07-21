@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { ClinicRhythmService } from '@/lib/services/clinic-rhythm-service'
 
 export async function GET() {

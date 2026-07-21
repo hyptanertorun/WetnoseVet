@@ -1,4 +1,5 @@
 // AI Image Generation - OPTIONAL FEATURE
+export const dynamic = 'force-dynamic'
 // Returns disabled response if API keys are not configured
 
 import { NextRequest, NextResponse } from 'next/server'

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor } from '@/lib/middleware/auth'
 import { AppointmentService } from '@/lib/services/appointment-service'
 import type { AppointmentStatus } from '@/lib/models/types'

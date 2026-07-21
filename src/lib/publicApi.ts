@@ -110,7 +110,7 @@ function getApiUrl(): string {
 
 export async function getPublicServices(): Promise<Service[]> {
   try {
-    const response = await fetch(`${getApiUrl()}/api/public/services`)
+    const response = await fetch(`${getApiUrl()}/api/public/services`, { cache: 'no-store' })
     if (!response.ok) {
       console.error('Failed to fetch services')
       return []
@@ -138,7 +138,7 @@ export async function getPublicServiceBySlug(slug: string): Promise<Service | nu
 
 export async function getPublicTeamMembers(): Promise<TeamMember[]> {
   try {
-    const response = await fetch(`${getApiUrl()}/api/public/team-members`)
+    const response = await fetch(`${getApiUrl()}/api/public/team-members`, { cache: 'no-store' })
     if (!response.ok) {
       console.error('Failed to fetch team members')
       return []
@@ -153,7 +153,7 @@ export async function getPublicTeamMembers(): Promise<TeamMember[]> {
 
 export async function getPublicTeamMemberBySlug(slug: string): Promise<TeamMember | null> {
   try {
-    const response = await fetch(`${getApiUrl()}/api/public/team-members/${slug}`)
+    const response = await fetch(`${getApiUrl()}/api/public/team-members/${slug}`, { cache: 'no-store' })
     if (!response.ok) {
       return null
     }
@@ -167,9 +167,7 @@ export async function getPublicTeamMemberBySlug(slug: string): Promise<TeamMembe
 // Blog / Sağlık Rehberi API Functions with Cache
 export async function getPublicBlogPosts(): Promise<BlogPostListItem[]> {
   try {
-    const response = await fetch(`${getApiUrl()}/api/public/blog`, {
-      next: { revalidate: 3600 } // Cache for 1 hour
-    })
+    const response = await fetch(`${getApiUrl()}/api/public/blog`, { cache: 'no-store' })
     if (!response.ok) {
       console.error('Failed to fetch blog posts')
       return []
@@ -184,9 +182,7 @@ export async function getPublicBlogPosts(): Promise<BlogPostListItem[]> {
 
 export async function getPublicBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
-    const response = await fetch(`${getApiUrl()}/api/public/blog/${slug}`, {
-      next: { revalidate: 3600 } // Cache for 1 hour
-    })
+    const response = await fetch(`${getApiUrl()}/api/public/blog/${slug}`, { cache: 'no-store' })
     if (!response.ok) {
       return null
     }

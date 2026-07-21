@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { BlogService } from '@/lib/services/blog-service'
 
 function calculateReadingTime(content: string | null | undefined): number {

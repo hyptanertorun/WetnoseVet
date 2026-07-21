@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic'
 import { GalleryService } from '@/lib/services/gallery-service'
 
 export async function GET(request: NextRequest) {
