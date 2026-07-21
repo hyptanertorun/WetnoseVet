@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { stripId } from '@/lib/db/mongodb'
 export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor, getClientIP, getUserAgent } from '@/lib/middleware/auth'
 import { BlogService } from '@/lib/services/blog-service'
@@ -19,7 +20,7 @@ export async function GET(
       return NextResponse.json({ detail: 'Blog yazısı bulunamadı' }, { status: 404 })
     }
     
-    return NextResponse.json(post)
+    return NextResponse.json(stripId(post))
   } catch (error) {
     console.error('Get blog post error:', error)
     return NextResponse.json({ detail: 'Blog yazısı alınırken hata oluştu' }, { status: 500 })

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { stripId } from '@/lib/db/mongodb'
 export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor } from '@/lib/middleware/auth'
 import { TeamService } from '@/lib/services/team-service'
@@ -26,7 +27,7 @@ export async function PATCH(
       return NextResponse.json({ detail: 'Ekip üyesi bulunamadı' }, { status: 404 })
     }
     
-    return NextResponse.json(member)
+    return NextResponse.json(stripId(member))
   } catch (error) {
     console.error('Update team member status error:', error)
     return NextResponse.json({ detail: 'Status güncellenirken hata oluştu' }, { status: 500 })

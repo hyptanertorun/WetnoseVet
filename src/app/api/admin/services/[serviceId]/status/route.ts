@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { stripId } from '@/lib/db/mongodb'
 export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor } from '@/lib/middleware/auth'
 import { ServiceService } from '@/lib/services/service-service'
@@ -26,7 +27,7 @@ export async function PATCH(
       return NextResponse.json({ detail: 'Hizmet bulunamadı' }, { status: 404 })
     }
     
-    return NextResponse.json(service)
+    return NextResponse.json(stripId(service))
   } catch (error) {
     console.error('Update service status error:', error)
     return NextResponse.json({ detail: 'Status güncellenirken hata oluştu' }, { status: 500 })

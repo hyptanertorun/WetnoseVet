@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { stripId } from '@/lib/db/mongodb'
 export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor } from '@/lib/middleware/auth'
 import { GalleryService } from '@/lib/services/gallery-service'
@@ -54,7 +55,7 @@ export async function PUT(
       return NextResponse.json({ detail: 'Albüm bulunamadı' }, { status: 404 })
     }
     
-    return NextResponse.json(album)
+    return NextResponse.json(stripId(album))
   } catch (error) {
     console.error('Update gallery album error:', error)
     return NextResponse.json({ detail: 'Albüm güncellenirken hata oluştu' }, { status: 500 })

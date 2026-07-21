@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { stripId } from '@/lib/db/mongodb'
 export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor, getClientIP, getUserAgent } from '@/lib/middleware/auth'
 import { TestimonialService } from '@/lib/services/testimonial-service'
@@ -19,7 +20,7 @@ export async function GET(
       return NextResponse.json({ detail: 'Yorum bulunamadı' }, { status: 404 })
     }
     
-    return NextResponse.json(testimonial)
+    return NextResponse.json(stripId(testimonial))
   } catch (error) {
     console.error('Get testimonial error:', error)
     return NextResponse.json({ detail: 'Yorum alınırken hata oluştu' }, { status: 500 })

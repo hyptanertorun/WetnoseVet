@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { stripId } from '@/lib/db/mongodb'
 export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor } from '@/lib/middleware/auth'
 import { SliderService } from '@/lib/services/slider-service'
@@ -18,7 +19,7 @@ export async function GET(
       return NextResponse.json({ detail: 'Slide bulunamadı' }, { status: 404 })
     }
     
-    return NextResponse.json(slide)
+    return NextResponse.json(stripId(slide))
   } catch (error) {
     console.error('Get slide error:', error)
     return NextResponse.json({ detail: 'Slide alınırken hata oluştu' }, { status: 500 })
@@ -42,7 +43,7 @@ export async function PUT(
       return NextResponse.json({ detail: 'Slide bulunamadı' }, { status: 404 })
     }
     
-    return NextResponse.json(slide)
+    return NextResponse.json(stripId(slide))
   } catch (error) {
     console.error('Update slide error:', error)
     return NextResponse.json({ detail: 'Slide güncellenirken hata oluştu' }, { status: 500 })

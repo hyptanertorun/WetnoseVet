@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { stripId } from '@/lib/db/mongodb'
 export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor, getClientIP, getUserAgent } from '@/lib/middleware/auth'
 import { TestimonialService } from '@/lib/services/testimonial-service'
@@ -45,7 +46,7 @@ export async function PATCH(
       userAgent: getUserAgent(request)
     })
     
-    return NextResponse.json(testimonial)
+    return NextResponse.json(stripId(testimonial))
   } catch (error) {
     console.error('Update testimonial status error:', error)
     return NextResponse.json({ detail: 'Status güncellenirken hata oluştu' }, { status: 500 })

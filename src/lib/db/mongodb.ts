@@ -65,3 +65,12 @@ export const COLLECTIONS = {
   CONTACT_MESSAGES: 'contact_messages',
   ROLE_PERMISSIONS: 'role_permissions'
 }
+
+// Strip MongoDB internal _id before returning documents in API responses
+export function stripId<T>(doc: T): T {
+  if (doc && typeof doc === 'object' && '_id' in (doc as any)) {
+    const { _id, ...rest } = doc as any
+    return rest as T
+  }
+  return doc
+}

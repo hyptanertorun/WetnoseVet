@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { stripId } from '@/lib/db/mongodb'
 export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor } from '@/lib/middleware/auth'
 import { SliderService } from '@/lib/services/slider-service'
@@ -10,7 +11,7 @@ export async function GET(request: NextRequest) {
     
     const settings = await SliderService.getSettings()
     
-    return NextResponse.json(settings)
+    return NextResponse.json(stripId(settings))
   } catch (error) {
     console.error('Get slider settings error:', error)
     return NextResponse.json({ detail: 'Slider ayarları alınırken hata oluştu' }, { status: 500 })
@@ -26,7 +27,7 @@ export async function PUT(request: NextRequest) {
     
     const settings = await SliderService.updateSettings(body)
     
-    return NextResponse.json(settings)
+    return NextResponse.json(stripId(settings))
   } catch (error) {
     console.error('Update slider settings error:', error)
     return NextResponse.json({ detail: 'Slider ayarları güncellenirken hata oluştu' }, { status: 500 })

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { stripId } from '@/lib/db/mongodb'
 export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor, getClientIP, getUserAgent } from '@/lib/middleware/auth'
 import { TeamService } from '@/lib/services/team-service'
@@ -19,7 +20,7 @@ export async function GET(
       return NextResponse.json({ detail: 'Ekip üyesi bulunamadı' }, { status: 404 })
     }
     
-    return NextResponse.json(member)
+    return NextResponse.json(stripId(member))
   } catch (error) {
     console.error('Get team member error:', error)
     return NextResponse.json({ detail: 'Ekip üyesi alınırken hata oluştu' }, { status: 500 })
@@ -58,7 +59,7 @@ export async function PUT(
       userAgent: getUserAgent(request)
     })
     
-    return NextResponse.json(updatedMember)
+    return NextResponse.json(stripId(updatedMember))
   } catch (error) {
     console.error('Update team member error:', error)
     return NextResponse.json({ detail: 'Ekip üyesi güncellenirken hata oluştu' }, { status: 500 })

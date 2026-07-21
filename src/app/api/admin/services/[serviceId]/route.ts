@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { stripId } from '@/lib/db/mongodb'
 export const dynamic = 'force-dynamic'
 import { requireAdminManagerEditor, getClientIP, getUserAgent } from '@/lib/middleware/auth'
 import { ServiceService } from '@/lib/services/service-service'
@@ -19,7 +20,7 @@ export async function GET(
       return NextResponse.json({ detail: 'Hizmet bulunamadı' }, { status: 404 })
     }
     
-    return NextResponse.json(service)
+    return NextResponse.json(stripId(service))
   } catch (error) {
     console.error('Get service error:', error)
     return NextResponse.json({ detail: 'Hizmet alınırken hata oluştu' }, { status: 500 })
@@ -58,7 +59,7 @@ export async function PUT(
       userAgent: getUserAgent(request)
     })
     
-    return NextResponse.json(updatedService)
+    return NextResponse.json(stripId(updatedService))
   } catch (error) {
     console.error('Update service error:', error)
     return NextResponse.json({ detail: 'Hizmet güncellenirken hata oluştu' }, { status: 500 })
