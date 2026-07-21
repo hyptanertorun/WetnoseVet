@@ -134,6 +134,7 @@ export default function AdminDashboardPage() {
   const [testimonialStats, setTestimonialStats] = useState<TestimonialAnalytics | null>(null)
   const [contactStats, setContactStats] = useState<ContactStats | null>(null)
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([])
+  const [healthIssues, setHealthIssues] = useState<HealthIssue[]>([])
 
   const role = user?.role || 'editor'
   const isOps = ['admin', 'manager', 'reception'].includes(role)
