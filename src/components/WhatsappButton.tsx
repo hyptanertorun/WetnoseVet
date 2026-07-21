@@ -3,11 +3,14 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Phone, Clock } from 'lucide-react'
-import { siteInfo } from '@/data/siteData'
+import { useSiteSettings, waDigits, telHref } from '@/hooks/useSiteSettings'
 
 export default function WhatsappButton() {
   const [isOpen, setIsOpen] = useState(false)
-  const phoneNumber = siteInfo.whatsapp || '905534845424'
+  const settings = useSiteSettings()
+  const phoneNumber = waDigits(settings?.whatsapp)
+  
+  if (!settings) return null
   
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent('Merhaba, WETNOSE Veteriner Kliniği hakkında bilgi almak istiyorum.')}`
 
@@ -60,7 +63,7 @@ export default function WhatsappButton() {
               </motion.a>
 
               <a
-                href={`tel:${siteInfo.phone.replace(/\s/g, '')}`}
+                href={telHref(settings.phone)}
                 className="flex items-center justify-center space-x-2 w-full py-3 mt-2 text-gray-400 hover:text-white transition-colors text-sm"
               >
                 <Phone className="w-4 h-4" />

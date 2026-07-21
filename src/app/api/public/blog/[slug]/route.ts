@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
 import { BlogService } from '@/lib/services/blog-service'
+import { getCollection, COLLECTIONS } from '@/lib/db/mongodb'
 
 function calculateReadingTime(content: string | null | undefined): number {
   if (!content) return 1
@@ -22,6 +23,18 @@ export async function GET(
         { status: 404 }
       )
     }
+
+    // Resolve related services (published only)
+    let relatedServices: unknown[] = []
+    if (post.related_service_ids && post.related_service_ids.length > 0) {
+      const servicesCollection = await getCollection(COLLECTIONS.SERVICES)
+      relatedServices = await servicesCollection
+        .find(
+          { status: 'published', id: { $in: post.related_service_ids } },
+          { projection: { _id: 0, id: 1, title: 1, slug: 1, short_description: 1, icon: 1 } }
+        )
+        .toArray()
+    }
     
     return NextResponse.json({
       id: post.id,
@@ -38,7 +51,8 @@ export async function GET(
       ai_generated: post.ai_generated,
       ai_metadata: post.ai_metadata,
       reading_time: calculateReadingTime(post.content),
-      view_count: post.view_count
+      view_count: post.view_count,
+      related_services: relatedServices
     })
   } catch (error) {
     console.error('Get public blog post error:', error)

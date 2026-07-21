@@ -10,7 +10,7 @@ import { BlogPost, FAQItem } from '@/lib/publicApi'
 import { 
   ArrowLeft, Calendar, Clock, ChevronDown, ChevronRight, MessageCircle, 
   PawPrint, Shield, Search, Folder, List, TrendingUp, Tag,
-  Eye, Share2, Facebook, Twitter, Link as LinkIcon, Check, BookOpen
+  Eye, Share2, Facebook, Twitter, Link as LinkIcon, Check, BookOpen, Stethoscope
 } from 'lucide-react'
 import Link from 'next/link'
 import Script from 'next/script'
@@ -481,6 +481,36 @@ export default function BlogPostClient({ post, isThinContent }: BlogPostClientPr
 
                   {/* Table of Contents */}
                   <TableOfContents headings={headings} activeId={activeHeadingId} />
+
+                  {/* İlgili Hizmetler */}
+                  {post.related_services && post.related_services.length > 0 && (
+                    <div className="bg-teal-500/10 border border-teal-500/30 rounded-xl p-4" data-testid="blog-related-services-card">
+                      <h3 className="flex items-center gap-2 text-white font-semibold mb-3 text-sm">
+                        <Stethoscope className="w-4 h-4 text-teal-400" />
+                        İlgili Hizmetlerimiz
+                      </h3>
+                      <div className="space-y-2">
+                        {post.related_services.map((svc) => (
+                          <Link
+                            key={svc.id}
+                            href={`/hizmetler/${svc.slug}`}
+                            className="block bg-gray-900/40 border border-gray-700/50 rounded-lg px-3 py-2.5 hover:border-teal-500/50 transition-colors"
+                          >
+                            <p className="text-teal-300 text-sm font-medium">{svc.title}</p>
+                            {svc.short_description && (
+                              <p className="text-gray-500 text-xs mt-0.5 line-clamp-2">{svc.short_description}</p>
+                            )}
+                          </Link>
+                        ))}
+                      </div>
+                      <Link
+                        href="/randevu"
+                        className="mt-3 flex items-center justify-center gap-2 w-full px-3 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium rounded-lg transition-colors"
+                      >
+                        Randevu Al
+                      </Link>
+                    </div>
+                  )}
 
                   {/* Popular Posts */}
                   <PopularPosts currentSlug={post.slug} />

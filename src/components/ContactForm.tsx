@@ -2,23 +2,24 @@
 
 import { motion } from 'framer-motion'
 import { Phone, Mail, MapPin, Clock, Navigation, MessageCircle, Calendar, Sparkles, ArrowRight } from 'lucide-react'
-import { siteInfo } from '@/data/siteData'
+import { useSiteSettings, waDigits, telHref } from '@/hooks/useSiteSettings'
 import Link from 'next/link'
 
 export default function ContactForm() {
+  const settings = useSiteSettings()
   const contactCards = [
     {
       icon: Phone,
       label: 'Telefon',
-      value: siteInfo.phone,
-      subValue: siteInfo.phone2,
-      href: `tel:${siteInfo.phone.replace(/\s/g, '')}`,
+      value: settings?.phone || '',
+      subValue: settings?.emergency_phone || undefined,
+      href: telHref(settings?.phone),
     },
     {
       icon: Mail,
       label: 'E-posta',
-      value: siteInfo.email,
-      href: `mailto:${siteInfo.email}`,
+      value: settings?.email || '',
+      href: `mailto:${settings?.email || ''}`,
     },
     {
       icon: Clock,
@@ -134,7 +135,7 @@ export default function ContactForm() {
                 </div>
                 <div>
                   <h4 className="text-white font-semibold text-lg mb-2">Adresimiz</h4>
-                  <p className="text-gray-400 leading-relaxed">{siteInfo.address}</p>
+                  <p className="text-gray-400 leading-relaxed">{settings?.address || ''}</p>
                 </div>
               </div>
             </div>
@@ -207,7 +208,7 @@ export default function ContactForm() {
 
             {/* WhatsApp CTA */}
             <motion.a
-              href="https://wa.me/905534845424"
+              href={`https://wa.me/${waDigits(settings?.whatsapp)}`}
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02, boxShadow: '0 0 40px rgba(34,197,94,0.4)' }}
@@ -312,7 +313,7 @@ export default function ContactForm() {
 
                 {/* Info Note */}
                 <p className="text-center text-gray-500 text-sm mt-4">
-                  Acil durumlar için <a href="tel:05534845424" className="text-teal-400 hover:underline">0553 484 54 24</a> numarasını arayın
+                  Acil durumlar için <a href={telHref(settings?.emergency_phone || settings?.phone)} className="text-teal-400 hover:underline">{settings?.emergency_phone || settings?.phone || ''}</a> numarasını arayın
                 </p>
               </div>
             </div>

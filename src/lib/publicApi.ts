@@ -20,6 +20,8 @@ interface Service {
     meta_description: string | null
     og_image_url: string | null
   }
+  related_blog_posts?: { title: string; slug: string; excerpt: string | null; cover_image_url: string | null; category: string | null }[]
+  providers?: { full_name: string; slug: string; role_title: string; photo_url: string | null }[]
 }
 
 interface TeamMember {
@@ -97,6 +99,7 @@ interface BlogPost {
   ai_generated: boolean
   ai_metadata: AIMetadata | null
   reading_time: number | null
+  related_services?: { id: string; title: string; slug: string; short_description: string | null; icon: string | null }[]
 }
 
 function getApiUrl(): string {

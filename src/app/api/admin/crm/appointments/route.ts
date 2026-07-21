@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
-import { requireAdminManagerEditor, getClientIP, getUserAgent } from '@/lib/middleware/auth'
+import { requireOpsRoles, getClientIP, getUserAgent } from '@/lib/middleware/auth'
 import { AppointmentService } from '@/lib/services/appointment-service'
 import { AuditService } from '@/lib/services/audit-service'
 import type { AppointmentStatus, LeadHeat } from '@/lib/models/types'
 
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await requireAdminManagerEditor(request)
+    const authResult = await requireOpsRoles(request)
     if (authResult instanceof NextResponse) return authResult
     
     const searchParams = request.nextUrl.searchParams
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const authResult = await requireAdminManagerEditor(request)
+    const authResult = await requireOpsRoles(request)
     if (authResult instanceof NextResponse) return authResult
     const { user } = authResult
     

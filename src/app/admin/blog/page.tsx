@@ -9,6 +9,7 @@ import {
   Sparkles, ChevronDown, Clock, Check, AlertCircle, Wand2, Image as ImageIcon
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 import { format } from 'date-fns'
 import { tr } from 'date-fns/locale'
 import ImageUploadCropper from '@/components/admin/ImageUploadCropper'
@@ -55,7 +56,7 @@ export default function AdminBlogPage() {
     setLoading(true)
     try {
       const res = await adminApi.request<{posts: BlogPost[], total: number}>(
-        `/api/admin/blog-posts?limit=50${statusFilter ? `&status=${statusFilter}` : ''}${showArchived ? '&archived=true' : ''}${search ? `&search=${encodeURIComponent(search)}` : ''}`
+        `/api/admin/blog?limit=50${statusFilter ? `&status=${statusFilter}` : ''}${showArchived ? '&archived=true' : ''}${search ? `&search=${encodeURIComponent(search)}` : ''}`
       )
       if (res.data) {
         setPosts(res.data.posts)
@@ -70,8 +71,18 @@ export default function AdminBlogPage() {
     loadPosts()
   }, [statusFilter, showArchived, search])
 
+  // AI Writer'dan gelen ?edit={id} parametresiyle editörü otomatik aç
+  useEffect(() => {
+    const editId = new URLSearchParams(window.location.search).get('edit')
+    if (!editId) return
+    adminApi.request<BlogPost>(`/api/admin/blog/${editId}`).then(res => {
+      if (res.data) setEditingPost(res.data)
+      window.history.replaceState({}, '', '/admin/blog')
+    })
+  }, [])
+
   const handleStatusChange = async (postId: string, newStatus: string) => {
-    await adminApi.request(`/api/admin/blog-posts/${postId}/status`, {
+    await adminApi.request(`/api/admin/blog/${postId}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status: newStatus })
     })
@@ -80,12 +91,12 @@ export default function AdminBlogPage() {
 
   const handleArchive = async (postId: string) => {
     if (!confirm('Bu yazıyı arşivlemek istediğinize emin misiniz?')) return
-    await adminApi.request(`/api/admin/blog-posts/${postId}`, { method: 'DELETE' })
+    await adminApi.request(`/api/admin/blog/${postId}`, { method: 'DELETE' })
     loadPosts()
   }
 
   const handleRestore = async (postId: string) => {
-    await adminApi.request(`/api/admin/blog-posts/${postId}/restore`, { method: 'POST' })
+    await adminApi.request(`/api/admin/blog/${postId}/restore`, { method: 'POST' })
     loadPosts()
   }
 
@@ -100,13 +111,24 @@ export default function AdminBlogPage() {
           </h1>
           <p className="text-gray-400 mt-1">Blog yazılarını oluşturun ve düzenleyin</p>
         </div>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Yeni Yazı
-        </button>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/blog/ai-writer"
+            data-testid="blog-ai-write-btn"
+            className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 text-purple-300 border border-purple-500/40 rounded-lg hover:bg-purple-500/30 transition-colors"
+          >
+            <Sparkles className="w-4 h-4" />
+            AI ile Yaz
+          </Link>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            data-testid="blog-new-post-btn"
+            className="flex items-center gap-2 px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Yeni Yazı
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -155,6 +177,7 @@ export default function AdminBlogPage() {
           <div className="flex flex-col items-center justify-center py-12 text-gray-400">
             <FileText className="w-12 h-12 mb-4 opacity-50" />
             <p>Henüz blog yazısı yok</p>
+            <p className="text-gray-500 text-sm mt-1">&quot;AI ile Yaz&quot; ile dakikalar içinde ilk taslağınızı oluşturabilirsiniz.</p>
           </div>
         ) : (
           <div className="divide-y divide-gray-700/50">
@@ -302,8 +325,17 @@ function BlogPostModal({
     meta_title: '',
     meta_description: ''
   })
+  const [relatedServiceIds, setRelatedServiceIds] = useState<string[]>(post?.related_service_ids || [])
+  const [allServices, setAllServices] = useState<{ id: string; title: string }[]>([])
   const [loading, setLoading] = useState(false)
   const [loadingPost, setLoadingPost] = useState(false)
+
+  // Load services for relation selector
+  useEffect(() => {
+    adminApi.request<{ services: { id: string; title: string }[] }>('/api/admin/services?limit=100&status=published').then(res => {
+      if (res.data?.services) setAllServices(res.data.services)
+    })
+  }, [])
   
   // AI Revize state
   const [showAIPanel, setShowAIPanel] = useState(false)
@@ -320,7 +352,7 @@ function BlogPostModal({
   useEffect(() => {
     if (post) {
       setLoadingPost(true)
-      adminApi.request<BlogPost>(`/api/admin/blog-posts/${post.id}`).then(res => {
+      adminApi.request<BlogPost>(`/api/admin/blog/${post.id}`).then(res => {
         if (res.data) {
           setFormData(prev => ({
             ...prev,
@@ -328,6 +360,7 @@ function BlogPostModal({
             meta_title: res.data?.meta_title || '',
             meta_description: res.data?.meta_description || ''
           }))
+          setRelatedServiceIds(res.data?.related_service_ids || [])
         }
         setLoadingPost(false)
       })
@@ -394,17 +427,18 @@ function BlogPostModal({
 
     const data = {
       ...formData,
-      tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean)
+      tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
+      related_service_ids: relatedServiceIds
     }
 
     try {
       if (post) {
-        await adminApi.request(`/api/admin/blog-posts/${post.id}`, {
+        await adminApi.request(`/api/admin/blog/${post.id}`, {
           method: 'PUT',
           body: JSON.stringify(data)
         })
       } else {
-        await adminApi.request('/api/admin/blog-posts', {
+        await adminApi.request('/api/admin/blog', {
           method: 'POST',
           body: JSON.stringify(data)
         })
@@ -655,6 +689,27 @@ function BlogPostModal({
                     />
                     <span className="text-xs text-gray-500">{formData.meta_description.length}/155</span>
                   </div>
+                </div>
+              </div>
+
+              {/* İlgili Hizmetler */}
+              <div className="pt-2 border-t border-gray-700">
+                <h4 className="text-sm font-semibold text-gray-300 mb-1">İlgili Hizmetler</h4>
+                <p className="text-xs text-gray-500 mb-3">Seçilen hizmetlerin detay sayfasında bu yazı &quot;İlgili Yazılar&quot; bölümünde gösterilir.</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-36 overflow-y-auto" data-testid="blog-related-services">
+                  {allServices.map(svc => (
+                    <label key={svc.id} className="flex items-center gap-2 text-sm text-gray-300 bg-gray-900/50 border border-gray-700 rounded-lg px-3 py-2 cursor-pointer hover:border-teal-500/50">
+                      <input
+                        type="checkbox"
+                        checked={relatedServiceIds.includes(svc.id)}
+                        onChange={(e) => setRelatedServiceIds(prev =>
+                          e.target.checked ? [...prev, svc.id] : prev.filter(id => id !== svc.id)
+                        )}
+                        className="accent-teal-500"
+                      />
+                      <span className="truncate">{svc.title}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
 

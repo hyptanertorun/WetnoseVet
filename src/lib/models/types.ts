@@ -76,6 +76,7 @@ export interface TeamMember {
   role_title: string
   department?: string | null
   specialties: string[]
+  service_ids?: string[]
   bio?: string | null
   short_bio?: string | null
   photo_url: string
@@ -140,6 +141,7 @@ export interface BlogPost {
   status: ServiceStatus
   published_at?: Date | null
   ai_generated: boolean
+  related_service_ids?: string[]
   ai_metadata?: AIMetadata | null
   view_count: number
   archived_at?: Date | null
@@ -284,6 +286,7 @@ export interface Appointment {
   preferred_time?: string | null
   message?: string | null
   source: string
+  source_message_id?: string | null
   status: AppointmentStatus
   assigned_to?: string | null
   assigned_to_email?: string | null
@@ -448,7 +451,7 @@ export interface Version {
 }
 
 // Contact Message Types
-export type ContactStatus = 'new' | 'read' | 'replied' | 'archived'
+export type ContactStatus = 'new' | 'read' | 'replied' | 'converted' | 'archived'
 
 export interface ContactMessage {
   id: string
@@ -461,4 +464,6 @@ export interface ContactMessage {
   created_at: Date
   read_at?: Date | null
   replied_at?: Date | null
+  converted_appointment_id?: string | null
+  converted_at?: Date | null
 }

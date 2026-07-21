@@ -1209,6 +1209,19 @@ class AdminApi {
     })
   }
 
+  async convertMessageToAppointment(messageId: string, force = false) {
+    return this.request<{
+      message?: string
+      appointment_id?: string
+      requires_confirmation?: boolean
+      detail?: string
+      duplicates?: Array<{ id: string; name: string; phone: string; status: string; created_at: string }>
+    }>(`/api/admin/contact/messages/${messageId}/convert`, {
+      method: 'POST',
+      body: JSON.stringify({ force }),
+    })
+  }
+
   // ============ Slider Management Methods ============
   
   async getSlides(includeInactive: boolean = true) {

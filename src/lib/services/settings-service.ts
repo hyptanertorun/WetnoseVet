@@ -4,8 +4,8 @@ import type { Settings, WorkingHour } from '@/lib/models/types'
 
 const DEFAULT_SETTINGS: Omit<Settings, 'id' | 'updated_at' | 'updated_by'> = {
   clinic_name: 'Wetnose Veteriner Kliniği',
-  phone: '+90 553 484 54 24',
-  whatsapp: '+905534845424',
+  phone: '0262 321 33 53',
+  whatsapp: '905449386673',
   emergency_phone: null,
   email: 'info@wetnose.com.tr',
   address: 'Kadıköy Mah. Atatürk Bulvarı Atatürk Ortaokulu Karşısı',
@@ -92,6 +92,8 @@ export class SettingsService {
     city: string
     district: string
     is_24_7_emergency: boolean
+    working_hours: WorkingHour[]
+    maps_embed_url: string | null
     social_links: {
       facebook: string | null
       instagram: string | null
@@ -113,6 +115,8 @@ export class SettingsService {
       city: settings.city,
       district: settings.district,
       is_24_7_emergency: settings.is_24_7_emergency,
+      working_hours: settings.working_hours || [],
+      maps_embed_url: settings.maps_embed_url || null,
       social_links: {
         facebook: settings.facebook_url,
         instagram: settings.instagram_url,

@@ -1,22 +1,13 @@
 // Wetnose Veteriner Kliniği Site Data
+// NOT: İletişim bilgileri (telefon, WhatsApp, e-posta, adres, sosyal medya)
+// tek kaynak olarak Admin Panel > Site Ayarları'ndan (DB settings) yönetilir.
+// Bu dosyada iletişim verisi TUTULMAZ. Bkz: src/hooks/useSiteSettings.ts
 
 export const siteInfo = {
   name: "WETNOSE",
   tagline: "Veteriner Kliniği",
   slogan: "DOSTLARIMIZA ÇOK FAZLA DEĞER VERİYORUZ",
-  description: "Wetnose Veteriner Kliniği aracılığı ile minik dostlarımıza mutlu bir yuva ve aile arıyoruz.",
-  phone: "0553 484 54 24",
-  phone2: "0544 938 66 73",
-  email: "info@wetnose.com.tr",
-  address: "Kadıköy Mah. Atatürk Bulvarı Atatürk Ortaokulu Karşısı İZMİT/KOCAELİ",
-  whatsapp: "905534845424",
-  socialLinks: {
-    facebook: "#",
-    twitter: "#",
-    instagram: "https://www.instagram.com/wetnoseveteriner/",
-    youtube: "#",
-    linkedin: "#"
-  }
+  description: "Wetnose Veteriner Kliniği aracılığı ile minik dostlarımıza mutlu bir yuva ve aile arıyoruz."
 };
 
 export const navLinks = [

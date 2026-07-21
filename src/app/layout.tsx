@@ -75,11 +75,21 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Site settings (single source of truth) for JSON-LD
+  let s: { clinic_name?: string; phone?: string; address?: string; district?: string; city?: string; social_links?: Record<string, string | null> } = {}
+  try {
+    const { SettingsService } = await import('@/lib/services/settings-service')
+    s = await SettingsService.getPublicSettings()
+  } catch { /* fallback to defaults below */ }
+  const clinicName = s.clinic_name || 'Wetnose Veteriner Kliniği'
+  const phone = (s.phone || '').replace(/\s/g, '')
+  const sameAs = Object.values(s.social_links || {}).filter(Boolean)
+
   // JSON-LD Schema for SEO
   const jsonLd = {
     "@context": "https://schema.org",
@@ -87,28 +97,26 @@ export default function RootLayout({
       {
         "@type": "Organization",
         "@id": "https://wetnose.com.tr/#organization",
-        "name": "Wetnose Veteriner Kliniği",
+        "name": clinicName,
         "url": "https://wetnose.com.tr",
         "logo": {
           "@type": "ImageObject",
           "url": "/images/brand/logo.png"
         },
-        "sameAs": [
-          "https://www.instagram.com/wetnoseveteriner/"
-        ]
+        "sameAs": sameAs.length > 0 ? sameAs : ["https://www.instagram.com/wetnoseveteriner/"]
       },
       {
         "@type": "VeterinaryCare",
         "@id": "https://wetnose.com.tr/#veterinaryclinic",
-        "name": "Wetnose Veteriner Kliniği",
+        "name": clinicName,
         "image": "/images/brand/logo.png",
         "url": "https://wetnose.com.tr",
-        "telephone": "+90 553 484 54 24",
+        "telephone": phone || undefined,
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "Kadıköy Mah. Atatürk Bulvarı Atatürk Ortaokulu Karşısı",
-          "addressLocality": "İzmit",
-          "addressRegion": "Kocaeli",
+          "streetAddress": s.address || "Kadıköy Mah. Atatürk Bulvarı Atatürk Ortaokulu Karşısı",
+          "addressLocality": s.district || "İzmit",
+          "addressRegion": s.city || "Kocaeli",
           "addressCountry": "TR"
         },
         "openingHoursSpecification": [

@@ -85,7 +85,7 @@
   // Role-based permission checks
   export const ROLE_PERMISSIONS = {
     admin: ['*'],
-    manager: ['users:read', 'settings:read', 'settings:write', 'audit:read', 'content:*'],
+    manager: ['users:read', 'settings:read', 'settings:write', 'audit:read', 'content:*', 'leads:*'],
     reception: ['leads:*', 'content:read'],
     editor: ['content:*'],
   }

@@ -242,7 +242,7 @@ export default function ClinicRhythmPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Klinik Ritmi</h1>
+          <h1 className="text-2xl font-bold text-white">Klinik İçerikleri</h1>
           <p className="text-gray-400 text-sm mt-1">Günlük soru ve yanlış alarm içerikleri</p>
         </div>
         

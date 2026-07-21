@@ -14,6 +14,35 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 type ContentTone = 'professional' | 'warm' | 'informative'
+
+interface AIUsageStats {
+  total_image_generations: number
+  total_blog_generations: number
+  total_revisions: number
+  last_7_days: { image_generations: number; blog_generations: number; revisions: number }
+  estimated_cost_usd: number
+}
+
+function AIUsageCard() {
+  const [usage, setUsage] = useState<AIUsageStats | null>(null)
+  useEffect(() => {
+    adminApi.request<AIUsageStats>('/api/admin/ai-usage').then(res => {
+      if (res.data) setUsage(res.data)
+    })
+  }, [])
+  if (!usage) return null
+  return (
+    <div className="bg-gray-900/50 border border-gray-800 rounded-xl px-4 py-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm" data-testid="ai-usage-card">
+      <span className="text-gray-400 flex items-center gap-2">
+        <Sparkles className="w-4 h-4 text-purple-400" /> AI Kullanımı (son 7 gün):
+      </span>
+      <span className="text-gray-300">Blog: <b className="text-white">{usage.last_7_days.blog_generations}</b></span>
+      <span className="text-gray-300">Görsel: <b className="text-white">{usage.last_7_days.image_generations}</b></span>
+      <span className="text-gray-300">Revizyon: <b className="text-white">{usage.last_7_days.revisions}</b></span>
+      <span className="text-gray-300 ml-auto">Tahmini maliyet: <b className="text-purple-300">${usage.estimated_cost_usd.toFixed(2)}</b></span>
+    </div>
+  )
+}
 type ContentLength = 'short' | 'medium' | 'long'
 type CTAPreference = 'appointment' | 'whatsapp' | 'none'
 
@@ -120,6 +149,10 @@ export default function AIBlogWriterPage() {
           Blog Yönetimi
         </Link>
       </div>
+      
+      <AIUsageCard />
+      
+      <AIUsageCard />
       
       {/* Main Content */}
       <div className="grid lg:grid-cols-3 gap-6">
@@ -445,7 +478,7 @@ export default function AIBlogWriterPage() {
                 </div>
                 
                 <button
-                  onClick={() => router.push(`/admin/blog/${result.data!.blog_post_id}`)}
+                  onClick={() => router.push(`/admin/blog?edit=${result.data!.blog_post_id}`)}
                   className="w-full mt-4 py-2.5 rounded-xl bg-green-500/20 text-green-400 font-medium hover:bg-green-500/30 transition-colors flex items-center justify-center gap-2"
                 >
                   Düzenle ve Yayınla

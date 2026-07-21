@@ -218,7 +218,7 @@ export default function AdminSettingsPage() {
                   value={settings.emergency_phone}
                   onChange={(e) => handleChange('emergency_phone', e.target.value)}
                   disabled={!canEdit}
-                  placeholder="0553 484 54 24"
+                  placeholder="05XX XXX XX XX"
                   className="w-full bg-gray-800 border border-red-500/30 rounded-xl px-4 py-3 text-white focus:border-red-500 focus:outline-none disabled:opacity-50"
                 />
                 <p className="text-xs text-gray-500 mt-1">Ana sayfadaki Acil Hat bölümünde görüntülenecek numara</p>

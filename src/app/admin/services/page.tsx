@@ -292,7 +292,8 @@ export default function AdminServicesPage() {
         ) : filteredServices.length === 0 ? (
           <div className="p-12 text-center">
             <Stethoscope className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">{showArchived ? 'Arşivlenmiş hizmet yok' : 'Hizmet bulunamadı'}</p>
+            <p className="text-gray-400">{showArchived ? 'Arşivlenmiş hizmet yok' : 'Henüz yayınlanmış bir hizmet bulunmuyor'}</p>
+            {!showArchived && <p className="text-gray-500 text-sm mt-1">İlk hizmetinizi &quot;Yeni Hizmet&quot; butonuyla oluşturarak web sitesinde görünmesini sağlayabilirsiniz.</p>}
           </div>
         ) : (
           <div className="overflow-x-auto">

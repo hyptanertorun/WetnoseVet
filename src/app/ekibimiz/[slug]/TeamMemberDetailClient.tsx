@@ -23,8 +23,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-
-const WHATSAPP_LINK = 'https://wa.me/905534845424'
+import { useSiteSettings, waDigits } from '@/hooks/useSiteSettings'
 
 interface TeamMemberDetailClientProps {
   member: TeamMember
@@ -32,6 +31,8 @@ interface TeamMemberDetailClientProps {
 }
 
 export default function TeamMemberDetailClient({ member, otherMembers }: TeamMemberDetailClientProps) {
+  const settings = useSiteSettings()
+  const WHATSAPP_LINK = `https://wa.me/${waDigits(settings?.whatsapp)}`
   const isOwner = member.is_owner
   const accentColor = isOwner ? 'amber' : 'teal'
 

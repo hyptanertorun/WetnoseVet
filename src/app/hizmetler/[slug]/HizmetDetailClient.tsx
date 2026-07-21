@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Service } from '@/lib/publicApi'
+import { useSiteSettings, waDigits, telHref } from '@/hooks/useSiteSettings'
 import { ArrowLeft, Clock, CheckCircle, Calendar, Phone, FlaskConical, Scan, Ambulance, Droplets, Stethoscope, HeartPulse, Scissors, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
@@ -23,6 +24,7 @@ interface HizmetDetailClientProps {
 }
 
 export default function HizmetDetailClient({ service }: HizmetDetailClientProps) {
+  const settings = useSiteSettings()
   const IconComponent = service.icon ? iconMap[service.icon.toLowerCase()] : Stethoscope
 
   return (
@@ -77,6 +79,70 @@ export default function HizmetDetailClient({ service }: HizmetDetailClientProps)
                   dangerouslySetInnerHTML={{ __html: service.long_description || service.short_description || '' }}
                 />
               </motion.div>
+
+              {/* Bu Hizmeti Veren Uzmanlar */}
+              {service.providers && service.providers.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                  className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 mt-8"
+                  data-testid="service-providers-section"
+                >
+                  <h2 className="text-xl font-semibold text-white mb-6">Bu Hizmeti Veren Uzmanlarımız</h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {service.providers.map((p) => (
+                      <Link
+                        key={p.slug}
+                        href={`/ekibimiz/${p.slug}`}
+                        className="group flex items-center gap-3 bg-slate-900/50 border border-slate-700/50 rounded-xl p-3 hover:border-teal-500/50 transition-colors"
+                      >
+                        {p.photo_url ? (
+                          <img src={p.photo_url} alt={p.full_name} className="w-12 h-12 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center text-teal-400 font-semibold">
+                            {p.full_name.charAt(0)}
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-white text-sm font-medium truncate group-hover:text-teal-400 transition-colors">{p.full_name}</p>
+                          <p className="text-gray-500 text-xs truncate">{p.role_title}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* İlgili Yazılar */}
+              {service.related_blog_posts && service.related_blog_posts.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25 }}
+                  className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 mt-8"
+                  data-testid="service-related-posts-section"
+                >
+                  <h2 className="text-xl font-semibold text-white mb-6">Sağlık Rehberinden İlgili Yazılar</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {service.related_blog_posts.map((post) => (
+                      <Link
+                        key={post.slug}
+                        href={`/saglik-rehberi/${post.slug}`}
+                        className="group bg-slate-900/50 border border-slate-700/50 rounded-xl overflow-hidden hover:border-teal-500/50 transition-colors"
+                      >
+                        {post.cover_image_url && (
+                          <img src={post.cover_image_url} alt={post.title} className="w-full h-28 object-cover" />
+                        )}
+                        <div className="p-4">
+                          <p className="text-white text-sm font-medium line-clamp-2 group-hover:text-teal-400 transition-colors">{post.title}</p>
+                          {post.excerpt && <p className="text-gray-500 text-xs mt-1 line-clamp-2">{post.excerpt}</p>}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </div>
 
             {/* Sidebar */}
@@ -96,14 +162,14 @@ export default function HizmetDetailClient({ service }: HizmetDetailClientProps)
                   </div>
                   <div className="flex items-center gap-3 text-gray-300">
                     <Phone className="w-5 h-5 text-teal-400" />
-                    <a href="tel:+905534845424" className="hover:text-teal-400 transition-colors">
-                      +90 553 484 54 24
+                    <a href={telHref(settings?.phone)} className="hover:text-teal-400 transition-colors">
+                      {settings?.phone || ''}
                     </a>
                   </div>
                 </div>
 
                 <a
-                  href="https://wa.me/905534845424"
+                  href={`https://wa.me/${waDigits(settings?.whatsapp)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-cyan-600 transition-all"

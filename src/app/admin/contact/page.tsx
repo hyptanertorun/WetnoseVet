@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Mail, Inbox, Eye, EyeOff, Trash2, Search, Filter, RefreshCw,
   ChevronLeft, ChevronRight, Clock, User, Phone, MessageSquare,
-  Check, Archive, Send, Loader2, X, AlertCircle, MailOpen
+  Check, Archive, Send, Loader2, X, AlertCircle, MailOpen, CalendarPlus
 } from 'lucide-react'
 import { adminApi } from '@/lib/adminApi'
 import { cn } from '@/lib/utils'
@@ -21,6 +21,7 @@ interface ContactMessage {
   created_at: string
   read_at: string | null
   replied_at: string | null
+  converted_appointment_id?: string | null
 }
 
 interface ContactStats {
@@ -35,6 +36,7 @@ const STATUS_COLORS = {
   new: { bg: 'bg-blue-500/20', text: 'text-blue-400', label: 'Yeni' },
   read: { bg: 'bg-yellow-500/20', text: 'text-yellow-400', label: 'Okundu' },
   replied: { bg: 'bg-green-500/20', text: 'text-green-400', label: 'Yanıtlandı' },
+  converted: { bg: 'bg-purple-500/20', text: 'text-purple-400', label: 'Randevuya Dönüştü' },
   archived: { bg: 'bg-gray-500/20', text: 'text-gray-400', label: 'Arşiv' },
 }
 
@@ -134,6 +136,38 @@ export default function ContactMessagesPage() {
       fetchData()
     } catch {
       setError('Mesaj silinemedi')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleConvert = async (msg: ContactMessage) => {
+    setActionLoading(msg.id)
+    try {
+      const res = await adminApi.convertMessageToAppointment(msg.id, false)
+      if (res.error) {
+        setError(res.error)
+        return
+      }
+      if (res.data?.requires_confirmation) {
+        const dupList = (res.data.duplicates || [])
+          .map(d => `• ${d.name} (${d.phone}) — durum: ${d.status}`)
+          .join('\n')
+        const ok = confirm(
+          `⚠️ Olası mükerrer müşteri!\n\nAynı telefon veya e-posta ile kayıtlı randevu talebi bulundu:\n${dupList}\n\nYine de yeni bir randevu talebi oluşturulsun mu?`
+        )
+        if (!ok) return
+        const forced = await adminApi.convertMessageToAppointment(msg.id, true)
+        if (forced.error) {
+          setError(forced.error)
+          return
+        }
+      }
+      setSuccess('Mesaj randevu talebine dönüştürüldü')
+      setSelectedMessage(null)
+      fetchData()
+    } catch {
+      setError('Dönüştürme başarısız oldu')
     } finally {
       setActionLoading(null)
     }
@@ -452,9 +486,63 @@ export default function ContactMessagesPage() {
               </div>
               
               {/* Actions */}
-              <div className="p-6 border-t border-gray-800 flex items-center justify-between">
+              <div className="p-6 border-t border-gray-800 space-y-4">
+                {/* Contact actions */}
+                <div className="flex flex-wrap items-center gap-2">
+                  {selectedMessage.phone && (
+                    <>
+                      <a
+                        href={`tel:${selectedMessage.phone.replace(/\s/g, '')}`}
+                        data-testid="message-call-btn"
+                        className="flex items-center gap-2 px-3 py-2 bg-teal-500/20 hover:bg-teal-500/30 text-teal-400 rounded-lg text-sm transition-colors"
+                      >
+                        <Phone className="w-4 h-4" />
+                        Ara
+                      </a>
+                      <a
+                        href={`https://wa.me/${selectedMessage.phone.replace(/\D/g, '').replace(/^0/, '9' + '0')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-testid="message-wa-btn"
+                        className="flex items-center gap-2 px-3 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-400 rounded-lg text-sm transition-colors"
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                        WhatsApp
+                      </a>
+                    </>
+                  )}
+                  {selectedMessage.status !== 'converted' ? (
+                    <button
+                      onClick={() => handleConvert(selectedMessage)}
+                      disabled={actionLoading === selectedMessage.id}
+                      data-testid="message-convert-btn"
+                      className="flex items-center gap-2 px-3 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 rounded-lg text-sm transition-colors disabled:opacity-50"
+                    >
+                      {actionLoading === selectedMessage.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <CalendarPlus className="w-4 h-4" />
+                      )}
+                      Randevu Talebine Dönüştür
+                    </button>
+                  ) : (
+                    <a
+                      href="/admin/crm"
+                      data-testid="message-converted-link"
+                      className="flex items-center gap-2 px-3 py-2 bg-purple-500/20 text-purple-300 rounded-lg text-sm"
+                    >
+                      <Check className="w-4 h-4" />
+                      Randevuya dönüştürüldü — CRM&apos;de görüntüle
+                    </a>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-400">Durum:</span>
+                  {selectedMessage.status === 'converted' ? (
+                    <span className="px-3 py-1.5 bg-purple-500/20 text-purple-300 rounded-lg text-sm">Randevuya Dönüştü</span>
+                  ) : (
                   <select
                     value={selectedMessage.status}
                     onChange={(e) => handleStatusChange(selectedMessage.id, e.target.value)}
@@ -465,6 +553,7 @@ export default function ContactMessagesPage() {
                     <option value="replied">Yanıtlandı</option>
                     <option value="archived">Arşiv</option>
                   </select>
+                  )}
                 </div>
                 
                 <div className="flex items-center gap-2">
@@ -482,6 +571,7 @@ export default function ContactMessagesPage() {
                     <Trash2 className="w-4 h-4" />
                     Sil
                   </button>
+                </div>
                 </div>
               </div>
             </motion.div>

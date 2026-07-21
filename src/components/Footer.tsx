@@ -8,8 +8,9 @@ import {
   Stethoscope, Syringe, Scissors, AlertCircle,
   ChevronRight, Sparkles, Youtube
 } from 'lucide-react'
-import { siteInfo } from '@/data/siteData'
+
 import { cn } from '@/lib/utils'
+import { waDigits } from '@/hooks/useSiteSettings'
 import Link from 'next/link'
 
 // Pinterest icon (not in lucide-react)
@@ -183,7 +184,7 @@ export default function Footer() {
     settings?.social_links?.youtube && { name: 'YouTube', icon: Youtube, href: settings.social_links.youtube, color: 'hover:text-red-500' },
     settings?.social_links?.pinterest && { name: 'Pinterest', icon: PinterestIcon, href: settings.social_links.pinterest, color: 'hover:text-red-400' },
     settings?.social_links?.tiktok && { name: 'TikTok', icon: TikTokIcon, href: settings.social_links.tiktok, color: 'hover:text-white' },
-    { name: 'WhatsApp', icon: MessageCircle, href: `https://wa.me/${settings?.whatsapp || '905534845424'}`, color: 'hover:text-green-400' },
+    { name: 'WhatsApp', icon: MessageCircle, href: `https://wa.me/${waDigits(settings?.whatsapp)}`, color: 'hover:text-green-400' },
   ].filter(Boolean) as { name: string; icon: React.ComponentType<{className?: string}>; href: string; color: string }[]
 
   return (
@@ -316,25 +317,25 @@ export default function Footer() {
                     className="flex items-start gap-3 text-gray-400 hover:text-teal-400 transition-colors group"
                   >
                     <MapPin className="w-5 h-5 text-teal-500/50 group-hover:text-teal-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm leading-relaxed">{settings?.address || siteInfo.address}</span>
+                    <span className="text-sm leading-relaxed">{settings?.address || ''}</span>
                   </a>
                 </li>
                 <li>
                   <a 
-                    href={`tel:${(settings?.phone || siteInfo.phone).replace(/\s/g, '')}`}
+                    href={`tel:${(settings?.phone || '').replace(/\s/g, '')}`}
                     className="flex items-center gap-3 text-gray-400 hover:text-teal-400 transition-colors group"
                   >
                     <Phone className="w-5 h-5 text-teal-500/50 group-hover:text-teal-400" />
-                    <span>{settings?.phone || siteInfo.phone}</span>
+                    <span>{settings?.phone || ''}</span>
                   </a>
                 </li>
                 <li>
                   <a 
-                    href={`mailto:${settings?.email || siteInfo.email}`}
+                    href={`mailto:${settings?.email || ''}`}
                     className="flex items-center gap-3 text-gray-400 hover:text-teal-400 transition-colors group"
                   >
                     <Mail className="w-5 h-5 text-teal-500/50 group-hover:text-teal-400" />
-                    <span>{settings?.email || siteInfo.email}</span>
+                    <span>{settings?.email || ''}</span>
                   </a>
                 </li>
                 <li className="flex items-center gap-3 text-gray-400">

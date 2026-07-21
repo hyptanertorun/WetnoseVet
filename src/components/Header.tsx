@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Phone } from 'lucide-react'
-import { siteInfo, navLinks } from '@/data/siteData'
+import { navLinks } from '@/data/siteData'
 import MagneticButton from './MagneticButton'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -126,7 +126,7 @@ export default function Header() {
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
             <motion.a
-              href={`tel:${(settings?.phone || siteInfo.phone).replace(/\s/g, '')}`}
+              href={`tel:${(settings?.phone || '').replace(/\s/g, '')}`}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.05 }}
@@ -134,7 +134,7 @@ export default function Header() {
               data-cursor="pointer"
             >
               <Phone className="w-4 h-4" />
-              <span className="font-medium">{settings?.phone || siteInfo.phone}</span>
+              <span className="font-medium">{settings?.phone || ''}</span>
             </motion.a>
             <MagneticButton href="/randevu" variant="header" className="!py-2.5 !px-5 !text-sm">
               Online Randevu Al
@@ -183,11 +183,11 @@ export default function Header() {
               </nav>
               <div className="mt-6 pt-6 border-t border-white/10 space-y-4">
                 <a
-                  href={`tel:${siteInfo.phone.replace(/\s/g, '')}`}
+                  href={`tel:${(settings?.phone || '').replace(/\s/g, '')}`}
                   className="flex items-center space-x-2 text-white/80 px-3"
                 >
                   <Phone className="w-4 h-4" />
-                  <span>{siteInfo.phone}</span>
+                  <span>{settings?.phone || ''}</span>
                 </a>
                 <MagneticButton href="/randevu" variant="primary" className="w-full !justify-center">
                   Online Randevu Al

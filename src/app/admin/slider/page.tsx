@@ -252,7 +252,7 @@ export default function SliderManagementPage() {
   const handleToggleActive = async (slide: Slide) => {
     try {
       await adminApi.updateSlide(slide.id, { is_active: !slide.is_active })
-      showMessage('success', slide.is_active ? 'Slide pasif yapıldı' : 'Slide aktif yapıldı')
+      showMessage('success', slide.is_active ? 'Slide yayından kaldırıldı' : 'Slide yayına alındı')
       fetchData()
     } catch (err) {
       showMessage('error', 'Güncelleme başarısız')
@@ -398,7 +398,7 @@ export default function SliderManagementPage() {
             </div>
             <div>
               <p className="text-2xl font-bold text-white">{slides.filter(s => s.is_active).length}</p>
-              <p className="text-sm text-gray-400">Aktif Slide</p>
+              <p className="text-sm text-gray-400">Yayındaki Slide</p>
             </div>
           </div>
         </div>
@@ -479,7 +479,7 @@ export default function SliderManagementPage() {
                           : "bg-gray-500/20 text-gray-400"
                       )}>
                         {slide.is_active ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
-                        {slide.is_active ? 'Aktif' : 'Pasif'}
+                        {slide.is_active ? 'Yayında' : 'Yayında Değil'}
                       </span>
                       <span className="text-xs text-gray-500">
                         {slide.buttons.length} buton
@@ -500,7 +500,7 @@ export default function SliderManagementPage() {
                           ? "text-green-400 hover:bg-green-500/20" 
                           : "text-gray-400 hover:bg-gray-700"
                       )}
-                      title={slide.is_active ? 'Pasif Yap' : 'Aktif Yap'}
+                      title={slide.is_active ? 'Yayından Kaldır' : 'Yayına Al'}
                     >
                       {slide.is_active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                     </button>

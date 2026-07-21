@@ -224,7 +224,7 @@ export default function MaintenancePage() {
             >
               {/* Phone */}
               <a
-                href={`tel:${(data?.phone || '0553 484 54 24').replace(/\s/g, '')}`}
+                href={`tel:${(data?.phone || '').replace(/\s/g, '')}`}
                 className="group flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-teal-500/50 hover:bg-teal-500/10 transition-all duration-300"
               >
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500/20 to-cyan-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
@@ -232,13 +232,13 @@ export default function MaintenancePage() {
                 </div>
                 <span className="text-white/60 text-sm mb-1">Telefon</span>
                 <span className="text-white font-medium text-sm">
-                  {data?.phone || '0553 484 54 24'}
+                  {data?.phone || ''}
                 </span>
               </a>
 
               {/* WhatsApp */}
               <a
-                href={`https://wa.me/${data?.whatsapp || '905534845424'}`}
+                href={`https://wa.me/${data?.whatsapp || ''}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex flex-col items-center p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-green-500/50 hover:bg-green-500/10 transition-all duration-300"

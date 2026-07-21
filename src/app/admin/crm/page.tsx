@@ -392,6 +392,7 @@ export default function CRMPage() {
               <div className="flex flex-col items-center justify-center py-12 text-gray-400">
                 <CalendarDays className="w-12 h-12 mb-4 opacity-50" />
                 <p>Henüz randevu talebi yok</p>
+                <p className="text-gray-500 text-sm mt-1">Web sitesindeki randevu formundan gelen talepler burada listelenir. İletişim mesajlarını da &quot;Randevuya Dönüştür&quot; ile buraya taşıyabilirsiniz.</p>
               </div>
             ) : (
               <div className="divide-y divide-gray-700/50 max-h-[600px] overflow-y-auto">

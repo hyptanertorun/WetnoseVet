@@ -1,0 +1,42 @@
+{
+  "summary": "Backend regression suite for Faz 2-5 admin refactor: 28/28 pytest tests PASS (auth for 4 roles, RBAC on CRM/messages, message→appointment E2E incl. duplicate 409 & requires_confirmation & force, blog CRUD + status + restore, blog↔service & team↔service relations, single-source settings phone/whatsapp, 9 public pages 200, system-health). Frontend UI testing BLOCKED by a P0 client-side runtime error on the admin dashboard — `healthIssues` state is used but never declared with useState, causing 'Application error: a client-side exception has occurred' immediately after login for ALL 4 roles. Sidebar grouping / role-based visibility / dashboard action cards therefore could not be visually verified.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "/app/src/app/admin/page.tsx (Admin Dashboard)",
+        "issue": "ReferenceError: healthIssues is not defined AND setHealthIssues is not defined. State is set at line 163 and read at lines 400/404/407 but NEVER declared with useState. Consequence: /admin route throws a client-side exception right after login for admin, manager, reception, and editor — the whole admin panel is unusable (blank page with 'Application error: a client-side exception has occurred'). Sidebar, dashboard cards, quick actions cannot be tested.",
+        "selector": "route /admin (page.tsx)",
+        "priority": "CRITICAL/P0"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_admin_refactor.py",
+    "/app/test_reports/pytest/pytest_admin_refactor.xml"
+  ],
+  "action_items": [
+    "URGENT: Add `const [healthIssues, setHealthIssues] = useState<any[]>([])` (and type it properly) in /app/src/app/admin/page.tsx near the other useState hooks around line 131-140. Rebuild the production bundle (yarn build && supervisor restart frontend) since the app runs via `next start`.",
+    "After the fix, re-run frontend UI test to verify: (a) sidebar shows 4 groups for admin, only Günlük Operasyon for reception, no CRM/messages for editor, CRM+messages for manager and no /admin/users for manager; (b) dashboard action cards (action-new-requests, action-new-messages, action-overdue, action-hot-lead, action-pending-comments, quick-ai-blog, system-health-panel, recent-activities-panel) render and navigate correctly.",
+    "Backend surface is solid — no backend actions required."
+  ],
+  "critical_code_review_comments": [
+    "P0: Missing useState declaration for healthIssues in admin dashboard — bundled build now throws ReferenceError, taking the whole admin panel down. Must have been introduced during Faz 2 dashboard rewrite; probable copy/paste refactor miss. Add explicit TypeScript type `useState<{severity:string;title:string;description?:string;action?:{href:string;label:string}}[]>([])` to avoid regressions.",
+    "Recommend a lint rule (eslint react/no-undef via tsc strict) + a pre-deploy smoke test that curls /admin as a logged-in user to catch client-side ReferenceErrors before shipping."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_admin_refactor.py (new)"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "BLOCKED (dashboard crash)"},
+  "test_credentials": "admin@wetnose.com.tr/WetnoseStage2026!, manager@wetnose.com.tr/Manager2026!, reception@wetnose.com.tr/Reception2026!, editor@wetnose.com.tr/Editor2026! — all four verified working against POST /api/auth/login (note: not /api/admin/auth/login).",
+  "seed_data_creation": "Created ephemeral test data during E2E (contact message with phone 0555 000 11 22, duplicate message, one draft blog post 'TEST_ Regression Blog', two appointments from convert). ALL cleaned up in test_zzz_cleanup — verified via mongosh: contact_messages/appointments/blog_posts with TEST_ markers = 0.",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend pytest file at /app/backend/tests/test_admin_refactor.py — run with `pytest backend/tests/test_admin_refactor.py -v`. Auth endpoint is /api/auth/login (NOT /api/admin/auth/login). After main agent fixes the healthIssues useState declaration and runs `yarn build && sudo supervisorctl restart frontend`, re-run the Playwright sidebar/dashboard verification. Do NOT delete these permanent fixtures: settings.phone=0262 321 33 53, settings.whatsapp=905449386673, blog kedi-beslenmesi-rehberi related_service_ids=[svc-laboratuvar], team hasan-murat-turkan service_ids=[svc-laboratuvar].",
+  "rca of the issue": "Root cause: /app/src/app/admin/page.tsx references `healthIssues` and `setHealthIssues` (lines 163, 400, 404, 407) but the `const [healthIssues, setHealthIssues] = useState(...)` declaration is missing from the useState block (lines 131-140). Because this is a production build (`next start` — hot reload disabled), the minified bundle contains the ReferenceError at runtime the moment the dashboard mounts. Reproduction: log in as any role → /admin → 'Application error: a client-side exception has occurred'. Fix: add the missing useState line, then `cd /app && yarn build && sudo supervisorctl restart frontend`."
+}

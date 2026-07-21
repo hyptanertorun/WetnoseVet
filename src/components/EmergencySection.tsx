@@ -15,7 +15,7 @@ const emergencySymptoms = [
 
 // Format phone number for display
 function formatPhoneNumber(phone: string): string {
-  if (!phone) return '0553 484 54 24'
+  if (!phone) return ''
   // Remove all non-digit characters
   const digits = phone.replace(/\D/g, '')
   // Format: 0XXX XXX XX XX
@@ -30,7 +30,7 @@ function formatPhoneNumber(phone: string): string {
 
 // Format phone number for tel: link
 function formatPhoneForTel(phone: string): string {
-  if (!phone) return '+905534845424'
+  if (!phone) return ''
   const digits = phone.replace(/\D/g, '')
   if (digits.startsWith('0')) {
     return `+9${digits}`
@@ -52,21 +52,18 @@ export default function EmergencySection() {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || ''}/api/public/settings`)
         if (res.ok) {
           const data = await res.json()
-          setEmergencyPhone(data.emergency_phone || '0553 484 54 24')
-        } else {
-          setEmergencyPhone('0553 484 54 24')
+          setEmergencyPhone(data.emergency_phone || data.phone || null)
         }
       } catch (err) {
         console.error('Failed to fetch emergency phone:', err)
-        setEmergencyPhone('0553 484 54 24')
       }
     }
     fetchSettings()
   }, [])
 
   // Hydration için aynı değeri server ve client'ta göster
-  const displayPhone = mounted && emergencyPhone ? formatPhoneNumber(emergencyPhone) : '0553 484 54 24'
-  const telPhone = mounted && emergencyPhone ? formatPhoneForTel(emergencyPhone) : '+905534845424'
+  const displayPhone = mounted && emergencyPhone ? formatPhoneNumber(emergencyPhone) : ''
+  const telPhone = mounted && emergencyPhone ? formatPhoneForTel(emergencyPhone) : ''
 
   return (
     <section className="py-16 bg-gradient-to-r from-red-950/50 via-orange-950/30 to-red-950/50 relative overflow-hidden">

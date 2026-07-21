@@ -102,15 +102,17 @@ export class ContactService {
     new: number
     read: number
     replied: number
+    converted: number
     archived: number
   }> {
     const messagesCollection = await getCollection<ContactMessage>(COLLECTIONS.CONTACT_MESSAGES)
     
-    const [total, newCount, readCount, repliedCount, archivedCount] = await Promise.all([
+    const [total, newCount, readCount, repliedCount, convertedCount, archivedCount] = await Promise.all([
       messagesCollection.countDocuments({}),
       messagesCollection.countDocuments({ status: 'new' }),
       messagesCollection.countDocuments({ status: 'read' }),
       messagesCollection.countDocuments({ status: 'replied' }),
+      messagesCollection.countDocuments({ status: 'converted' }),
       messagesCollection.countDocuments({ status: 'archived' })
     ])
     
@@ -119,6 +121,7 @@ export class ContactService {
       new: newCount,
       read: readCount,
       replied: repliedCount,
+      converted: convertedCount,
       archived: archivedCount
     }
   }

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import WhatsappButton from '@/components/WhatsappButton'
-import { siteInfo } from '@/data/siteData'
+import { useSiteSettings, waDigits, telHref } from '@/hooks/useSiteSettings'
 import { 
   Phone, Mail, MapPin, Clock, Send, CheckCircle, 
   Instagram, Facebook, MessageCircle, Navigation
@@ -13,6 +13,8 @@ import {
 import { cn } from '@/lib/utils'
 
 export default function IletisimPage() {
+  const settings = useSiteSettings()
+  const waNum = waDigits(settings?.whatsapp)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -107,12 +109,12 @@ export default function IletisimPage() {
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-1">Telefon</h3>
-                      <a href={`tel:${siteInfo.phone.replace(/\s/g, '')}`} className="text-gray-400 hover:text-teal-400 block">
-                        {siteInfo.phone}
+                      <a href={telHref(settings?.phone)} className="text-gray-400 hover:text-teal-400 block">
+                        {settings?.phone || ''}
                       </a>
-                      {siteInfo.phone2 && (
-                        <a href={`tel:${siteInfo.phone2.replace(/\s/g, '')}`} className="text-gray-400 hover:text-teal-400 block">
-                          {siteInfo.phone2}
+                      {settings?.emergency_phone && (
+                        <a href={telHref(settings.emergency_phone)} className="text-gray-400 hover:text-teal-400 block">
+                          {settings.emergency_phone}
                         </a>
                       )}
                     </div>
@@ -125,8 +127,8 @@ export default function IletisimPage() {
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-1">E-posta</h3>
-                      <a href={`mailto:${siteInfo.email}`} className="text-gray-400 hover:text-teal-400">
-                        {siteInfo.email}
+                      <a href={`mailto:${settings?.email || ''}`} className="text-gray-400 hover:text-teal-400">
+                        {settings?.email || ''}
                       </a>
                     </div>
                   </div>
@@ -138,7 +140,7 @@ export default function IletisimPage() {
                     </div>
                     <div>
                       <h3 className="text-white font-semibold mb-1">Adres</h3>
-                      <p className="text-gray-400">{siteInfo.address}</p>
+                      <p className="text-gray-400">{settings?.address || ''}</p>
                     </div>
                   </div>
 
@@ -161,24 +163,28 @@ export default function IletisimPage() {
               <div>
                 <h3 className="text-white font-semibold mb-4">Sosyal Medya</h3>
                 <div className="flex gap-3">
+                  {settings?.social_links?.instagram && (
                   <a
-                    href={siteInfo.socialLinks.instagram}
+                    href={settings.social_links.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-xl text-purple-400 hover:text-white hover:border-purple-400 transition-colors"
                   >
                     <Instagram className="w-6 h-6" />
                   </a>
+                  )}
+                  {settings?.social_links?.facebook && (
                   <a
-                    href={siteInfo.socialLinks.facebook}
+                    href={settings.social_links.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 bg-blue-500/20 border border-blue-500/30 rounded-xl text-blue-400 hover:text-white hover:border-blue-400 transition-colors"
                   >
                     <Facebook className="w-6 h-6" />
                   </a>
+                  )}
                   <a
-                    href={`https://wa.me/${siteInfo.whatsapp}`}
+                    href={`https://wa.me/${waNum}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-3 bg-green-500/20 border border-green-500/30 rounded-xl text-green-400 hover:text-white hover:border-green-400 transition-colors"
@@ -191,7 +197,7 @@ export default function IletisimPage() {
               {/* Quick Actions */}
               <div className="flex flex-wrap gap-3">
                 <a
-                  href={`https://wa.me/${siteInfo.whatsapp}?text=Merhaba,%20bilgi%20almak%20istiyorum.`}
+                  href={`https://wa.me/${waNum}?text=Merhaba,%20bilgi%20almak%20istiyorum.`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-5 py-3 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 transition-colors"
@@ -200,7 +206,7 @@ export default function IletisimPage() {
                   WhatsApp ile Yaz
                 </a>
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteInfo.address)}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings?.address || '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-5 py-3 bg-gray-800 text-white rounded-xl font-medium hover:bg-gray-700 transition-colors"

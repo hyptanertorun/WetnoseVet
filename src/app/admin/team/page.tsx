@@ -106,6 +106,8 @@ const DEPARTMENTS = [
 export default function AdminTeamPage() {
   const { user } = useAuthStore()
   const [members, setMembers] = useState<TeamMember[]>([])
+  const [serviceIds, setServiceIds] = useState<string[]>([])
+  const [allServices, setAllServices] = useState<{ id: string; title: string }[]>([])
   const [loading, setLoading] = useState(true)
   const [showArchived, setShowArchived] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -165,6 +167,13 @@ export default function AdminTeamPage() {
     loadMembers()
   }, [showArchived])
 
+  // Load services for relation selector
+  useEffect(() => {
+    adminApi.request<{ services: { id: string; title: string }[] }>('/api/admin/services?limit=100&status=published').then(res => {
+      if (res.data?.services) setAllServices(res.data.services)
+    })
+  }, [])
+
   const loadMembers = async () => {
     setLoading(true)
     const response = await adminApi.getTeamMembers(1, 100, { archived: showArchived })
@@ -177,6 +186,7 @@ export default function AdminTeamPage() {
 
   // Reset form
   const resetForm = () => {
+    setServiceIds([])
     setForm({
       full_name: '',
       slug: '',
@@ -313,6 +323,7 @@ export default function AdminTeamPage() {
       ...form,
       slug: form.slug || undefined,
       specialties: form.specialties ? form.specialties.split(',').map(s => s.trim()).filter(Boolean) : [],
+      service_ids: serviceIds,
       social_links: Object.values(form.social_links).some(v => v) ? form.social_links : undefined,
       education: form.education.length > 0 ? form.education : [],
       certifications: form.certifications.length > 0 ? form.certifications : [],
@@ -340,6 +351,7 @@ export default function AdminTeamPage() {
     const payload = {
       ...form,
       specialties: form.specialties ? form.specialties.split(',').map(s => s.trim()).filter(Boolean) : [],
+      service_ids: serviceIds,
       social_links: Object.values(form.social_links).some(v => v) ? form.social_links : undefined,
       education: form.education,
       certifications: form.certifications,
@@ -622,7 +634,8 @@ export default function AdminTeamPage() {
       ) : filteredMembers.length === 0 ? (
         <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-12 text-center">
           <UsersRound className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400">{showArchived ? 'Arşivlenmiş ekip üyesi yok' : 'Ekip üyesi bulunamadı'}</p>
+          <p className="text-gray-400">{showArchived ? 'Arşivlenmiş ekip üyesi yok' : 'Henüz ekip üyesi eklenmemiş'}</p>
+          {!showArchived && <p className="text-gray-500 text-sm mt-1">&quot;Yeni Üye&quot; butonuyla ekibinizi tanıtın; üyeler web sitesindeki Ekibimiz sayfasında görünür.</p>}
         </div>
       ) : viewMode === 'grid' ? (
         // Grid View with Drag & Drop
@@ -1223,6 +1236,27 @@ export default function AdminTeamPage() {
                 {/* Professional Tab */}
                 {activeTab === 'professional' && (
                   <div className="space-y-6">
+                    {/* Verdiği Hizmetler */}
+                    <div>
+                      <label className="block text-sm text-gray-400 mb-1">Verdiği Hizmetler</label>
+                      <p className="text-xs text-gray-500 mb-2">Seçilen hizmetlerin detay sayfasında bu üye &quot;Uzmanlarımız&quot; bölümünde gösterilir.</p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-36 overflow-y-auto" data-testid="team-service-selector">
+                        {allServices.map(svc => (
+                          <label key={svc.id} className="flex items-center gap-2 text-sm text-gray-300 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 cursor-pointer hover:border-teal-500/50">
+                            <input
+                              type="checkbox"
+                              checked={serviceIds.includes(svc.id)}
+                              onChange={(e) => setServiceIds(prev =>
+                                e.target.checked ? [...prev, svc.id] : prev.filter(id => id !== svc.id)
+                              )}
+                              className="accent-teal-500"
+                            />
+                            <span className="truncate">{svc.title}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm text-gray-400 mb-2">Uzmanlık Alanları</label>

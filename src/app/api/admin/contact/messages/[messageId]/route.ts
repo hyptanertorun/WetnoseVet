@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
-import { requireAdminManagerEditor } from '@/lib/middleware/auth'
+import { requireOpsRoles } from '@/lib/middleware/auth'
 import { ContactService } from '@/lib/services/contact-service'
 
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: Promise<{ messageId: string }> }
 ) {
   try {
-    const authResult = await requireAdminManagerEditor(request)
+    const authResult = await requireOpsRoles(request)
     if (authResult instanceof NextResponse) return authResult
     
     const { messageId } = await params
@@ -40,7 +40,7 @@ export async function DELETE(
   { params }: { params: Promise<{ messageId: string }> }
 ) {
   try {
-    const authResult = await requireAdminManagerEditor(request)
+    const authResult = await requireOpsRoles(request)
     if (authResult instanceof NextResponse) return authResult
     
     const { messageId } = await params

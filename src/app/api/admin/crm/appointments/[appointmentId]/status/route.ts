@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
-import { requireAdminManagerEditor } from '@/lib/middleware/auth'
+import { requireOpsRoles } from '@/lib/middleware/auth'
 import { AppointmentService } from '@/lib/services/appointment-service'
 import type { AppointmentStatus } from '@/lib/models/types'
 
@@ -9,7 +9,7 @@ export async function PATCH(
   { params }: { params: Promise<{ appointmentId: string }> }
 ) {
   try {
-    const authResult = await requireAdminManagerEditor(request)
+    const authResult = await requireOpsRoles(request)
     if (authResult instanceof NextResponse) return authResult
     
     const { appointmentId } = await params

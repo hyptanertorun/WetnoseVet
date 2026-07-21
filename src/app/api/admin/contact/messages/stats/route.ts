@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
-import { requireAdminManagerEditor } from '@/lib/middleware/auth'
+import { requireOpsRoles } from '@/lib/middleware/auth'
 import { ContactService } from '@/lib/services/contact-service'
 
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await requireAdminManagerEditor(request)
+    const authResult = await requireOpsRoles(request)
     if (authResult instanceof NextResponse) return authResult
     
     const stats = await ContactService.getStats()

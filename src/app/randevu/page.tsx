@@ -6,7 +6,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Calendar, Clock, Phone, User, PawPrint, Send, CheckCircle, ArrowRight, Heart, Shield, Sparkles, MessageCircle } from 'lucide-react'
 import TestimonialsSection from '@/components/TestimonialsSection'
-import { services, siteInfo } from '@/data/siteData'
+import { services } from '@/data/siteData'
+import { useSiteSettings, waDigits, telHref } from '@/hooks/useSiteSettings'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
@@ -132,6 +133,7 @@ type FormErrors = {
 }
 
 export default function RandevuPage() {
+  const settings = useSiteSettings()
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -271,7 +273,7 @@ export default function RandevuPage() {
       `> Saat: ${formData.time}\n` +
       `> Not: ${formData.note || '-'}`
     
-    const whatsappUrl = `https://wa.me/${siteInfo.whatsapp}?text=${encodeURIComponent(message)}`
+    const whatsappUrl = `https://wa.me/${waDigits(settings?.whatsapp)}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
     setIsSubmitted(true)
   }
@@ -464,11 +466,11 @@ export default function RandevuPage() {
               >
                 <p className="text-gray-400 text-sm mb-3">Hemen aramak ister misiniz?</p>
                 <a 
-                  href={`tel:${siteInfo.phone.replace(/\s/g, '')}`}
+                  href={telHref(settings?.phone)}
                   className="flex items-center gap-3 text-teal-400 hover:text-teal-300 transition-colors"
                 >
                   <Phone className="w-5 h-5" />
-                  <span className="text-lg font-semibold">{siteInfo.phone}</span>
+                  <span className="text-lg font-semibold">{settings?.phone || ''}</span>
                 </a>
               </motion.div>
             </motion.div>

@@ -151,6 +151,11 @@ export async function requireAdminManagerEditor(request: NextRequest) {
   return requireRole(request, ['admin', 'manager', 'editor'])
 }
 
+// Require operations roles (appointment requests, messages, ops dashboard)
+export async function requireOpsRoles(request: NextRequest) {
+  return requireRole(request, ['admin', 'manager', 'reception'])
+}
+
 // Get client IP from request
 export function getClientIP(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for')

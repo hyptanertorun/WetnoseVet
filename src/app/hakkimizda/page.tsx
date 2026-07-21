@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-import { siteInfo, clinicOwners } from '@/data/siteData'
+import { clinicOwners } from '@/data/siteData'
+import { useSiteSettings } from '@/hooks/useSiteSettings'
 import { Building2, Heart, Award, Users, Shield, ChevronDown, MapPin, Phone, Mail } from 'lucide-react'
 import Link from 'next/link'
 
@@ -27,7 +28,7 @@ const faqs = [
   },
   {
     question: 'Acil durumda ne yapmalıyım?',
-    answer: 'Acil durumda hemen 0553 484 54 24 numaralı telefonumuzu arayın. Gece dahil 7/24 acil hizmet vermekteyiz.'
+    answer: 'Acil durumda bizi hemen telefonla arayın; güncel numaramız sitenin üst bölümünde ve İletişim sayfasında yer alır. Gece dahil 7/24 acil hizmet vermekteyiz.'
   },
   {
     question: 'Aşı takvimi nasıl olmalı?',
@@ -72,6 +73,7 @@ function FAQItem({ question, answer, isOpen, onClick }: { question: string; answ
 }
 
 export default function HakkimizdaPage() {
+  const settings = useSiteSettings()
   const [openFAQ, setOpenFAQ] = useState<number | null>(0)
 
   const stats = [
@@ -229,7 +231,7 @@ export default function HakkimizdaPage() {
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Adres</h3>
-                  <p className="text-gray-400 text-sm">{siteInfo.address}</p>
+                  <p className="text-gray-400 text-sm">{settings?.address || ''}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -238,8 +240,8 @@ export default function HakkimizdaPage() {
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">Telefon</h3>
-                  <p className="text-gray-400 text-sm">{siteInfo.phone}</p>
-                  <p className="text-gray-400 text-sm">{siteInfo.phone2}</p>
+                  <p className="text-gray-400 text-sm">{settings?.phone || ''}</p>
+                  {settings?.emergency_phone && <p className="text-gray-400 text-sm">{settings.emergency_phone}</p>}
                 </div>
               </div>
               <div className="flex items-start gap-4">
@@ -248,7 +250,7 @@ export default function HakkimizdaPage() {
                 </div>
                 <div>
                   <h3 className="text-white font-medium mb-1">E-posta</h3>
-                  <p className="text-gray-400 text-sm">{siteInfo.email}</p>
+                  <p className="text-gray-400 text-sm">{settings?.email || ''}</p>
                 </div>
               </div>
             </div>
